@@ -1,0 +1,6 @@
+{
+  "name": "Oopsly - Spaced Repetition & Flashcards",
+  "description": "Cross-platform active recall and spaced repetition (SRS) flashcard app with Studio Ghibli inspired themes, Pomodoro study sessions, and a gamified forest sanctuary tree planting and land expansion game.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
