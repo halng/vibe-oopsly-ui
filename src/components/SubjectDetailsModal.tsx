@@ -25,6 +25,7 @@ import { ApiService } from '../services/api';
 import { formatInterval } from '../utils/fsrs';
 import { ImportCardsModal } from './ImportCardsModal';
 import { SubjectScheduleModal } from './SubjectScheduleModal';
+import { D3ProgressBar } from './D3ProgressBar';
 
 interface SubjectDetailsModalProps {
   subject: Subject;
@@ -185,6 +186,8 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
       c.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const masteredCards = cards.filter(c => c.stability >= 0.8 && c.intervalDays > 21).length;
+
   return (
     <div
       id="subject-details-modal"
@@ -209,9 +212,14 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
                   {cards.length} Cards
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 mt-0.5 max-w-xl line-clamp-1">
-                {subject.description || 'No description provided.'}
-              </p>
+              <div className="flex items-center gap-3 mt-0.5">
+                <p className="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 max-w-xl line-clamp-1">
+                  {subject.description || 'No description provided.'}
+                </p>
+                {cards.length > 0 && (
+                  <D3ProgressBar mastered={masteredCards} total={cards.length} color={subject.color || '#8BC34A'} />
+                )}
+              </div>
             </div>
           </div>
 
