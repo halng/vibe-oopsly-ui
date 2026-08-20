@@ -34,7 +34,7 @@ interface NavbarProps {
   onOpenNewShelf: () => void;
   onOpenSettings: () => void;
   onOpenProfile: () => void;
-  onOpenThemeModal: () => void;
+  onOpenSubscription?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -44,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenNewShelf,
   onOpenSettings,
   onOpenProfile,
-  onOpenThemeModal,
+  onOpenSubscription,
 }) => {
   const { isOnline, isSyncing, pendingCount, syncNow } = useSyncStatus();
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
@@ -222,7 +222,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <BarChart3 className="w-4 h-4" />
-                  <span>FSRS Stats</span>
+                  <span>Stats</span>
                 </button>
               </nav>
             </div>
@@ -230,59 +230,53 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Gamification Counters & Theme / User Actions */}
             <div className="flex items-center gap-1.5 sm:gap-2.5">
               {/* Online / Offline Sync Indicator */}
-              <button
-                id="nav-sync-status-btn"
-                data-testid="btn-sync-status"
-                onClick={() => syncNow()}
-                title={
-                  !isOnline
-                    ? `Offline Mode: ${pendingCount} pending changes saved to IndexedDB`
-                    : isSyncing
-                    ? 'Syncing changes to cloud...'
-                    : pendingCount > 0
-                    ? `${pendingCount} unsynced changes. Click to sync.`
-                    : 'Online · All cards & reviews synced'
-                }
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
-                  !isOnline
-                    ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800'
-                    : isSyncing
-                    ? 'bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800'
-                    : pendingCount > 0
-                    ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-700 animate-pulse'
-                    : 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200/80 dark:border-emerald-800/80 hover:bg-emerald-100/50'
-                }`}
-              >
-                {!isOnline ? (
-                  <>
-                    <WifiOff className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-                    <span className="hidden xs:inline">Offline</span>
-                    {pendingCount > 0 && (
-                      <span className="w-4 h-4 rounded-full bg-amber-600 text-white text-[9px] flex items-center justify-center font-extrabold">
-                        {pendingCount}
-                      </span>
-                    )}
-                  </>
-                ) : isSyncing ? (
-                  <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-sky-600 dark:text-sky-400 shrink-0" />
-                    <span className="hidden sm:inline">Syncing...</span>
-                  </>
-                ) : pendingCount > 0 ? (
-                  <>
-                    <Database className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-                    <span className="hidden sm:inline">Sync ({pendingCount})</span>
-                  </>
-                ) : (
-                  <>
-                    <span
-                      className="w-2 h-2 rounded-full shrink-0"
-                      style={{ backgroundColor: 'var(--theme-accent)' }}
-                    ></span>
-                    <span className="hidden lg:inline text-[11px]">Synced</span>
-                  </>
-                )}
-              </button>
+              {(!isOnline || isSyncing || pendingCount > 0) && (
+                <button
+                  id="nav-sync-status-btn"
+                  data-testid="btn-sync-status"
+                  onClick={() => syncNow()}
+                  title={
+                    !isOnline
+                      ? `Offline Mode: ${pendingCount} pending changes saved to IndexedDB`
+                      : isSyncing
+                      ? 'Syncing changes to cloud...'
+                      : pendingCount > 0
+                      ? `${pendingCount} unsynced changes. Click to sync.`
+                      : 'Online · All cards & reviews synced'
+                  }
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+                    !isOnline
+                      ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                      : isSyncing
+                      ? 'bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800'
+                      : pendingCount > 0
+                      ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-700 animate-pulse'
+                      : 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200/80 dark:border-emerald-800/80 hover:bg-emerald-100/50'
+                  }`}
+                >
+                  {!isOnline ? (
+                    <>
+                      <WifiOff className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                      <span className="hidden xs:inline">Offline</span>
+                      {pendingCount > 0 && (
+                        <span className="w-4 h-4 rounded-full bg-amber-600 text-white text-[9px] flex items-center justify-center font-extrabold">
+                          {pendingCount}
+                        </span>
+                      )}
+                    </>
+                  ) : isSyncing ? (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-sky-600 dark:text-sky-400 shrink-0" />
+                      <span className="hidden sm:inline">Syncing...</span>
+                    </>
+                  ) : pendingCount > 0 ? (
+                    <>
+                      <Database className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                      <span className="hidden sm:inline">Sync ({pendingCount})</span>
+                    </>
+                  ) : null}
+                </button>
+              )}
 
               {/* Streak Counter */}
               <div
@@ -369,17 +363,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 border-2 border-[var(--theme-card)]" />
               </button>
 
-              {/* Theme Selector Palette Button */}
-              <button
-                id="nav-theme-btn"
-                data-testid="btn-theme-switcher"
-                onClick={onOpenThemeModal}
-                title="Switch Visual Theme (Ghibli & Modern)"
-                className="p-2 rounded-xl text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 border border-[var(--theme-border)] transition-colors cursor-pointer"
-                style={{ borderColor: 'var(--theme-border)' }}
-              >
-                <Palette className="w-4 h-4" style={{ color: 'var(--theme-accent)' }} />
-              </button>
+              {/* Upgrade to Pro */}
+              {onOpenSubscription && (
+                <button
+                  onClick={onOpenSubscription}
+                  className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#8BC34A]/10 text-[#558B2F] dark:text-[#8BC34A] hover:bg-[#8BC34A]/20 transition-colors text-xs font-bold cursor-pointer border border-[#8BC34A]/20"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Pro</span>
+                </button>
+              )}
 
               {/* User Profile Avatar / Menu */}
               <button

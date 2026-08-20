@@ -15,7 +15,9 @@ import { ProfileSettingsModal } from './components/ProfileSettingsModal';
 import { ShelfModal } from './components/ShelfModal';
 import { SubjectModal } from './components/SubjectModal';
 import { ThemeModal } from './components/ThemeModal';
-import { AuthModal } from './components/AuthModal';
+import { AuthPage } from './components/AuthPage';
+import { LandingPage } from './components/LandingPage';
+import { SubscriptionPage } from './components/SubscriptionPage';
 import { StudyPomodoroView } from './components/StudyPomodoroView';
 import { WelcomeTourModal } from './components/WelcomeTourModal';
 import { MultiplayerLobbyModal } from './components/MultiplayerLobbyModal';
@@ -29,7 +31,8 @@ import { OfflineSyncBanner } from './components/OfflineSyncBanner';
 export const App: React.FC = () => {
   // Authentication & Profile State
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [showAuthPage, setShowAuthPage] = useState(false);
+  const [isSubscriptionPageOpen, setIsSubscriptionPageOpen] = useState(false);
 
   // Tour State
   const [hasSeenTour, setHasSeenTour] = useState(() => {
@@ -261,6 +264,21 @@ export const App: React.FC = () => {
     });
   };
 
+  if (!user && !isLoading) {
+    if (showAuthPage) {
+      return (
+        <AuthPage
+          onSuccess={(loggedUser) => {
+            setUser(loggedUser);
+            setShowAuthPage(false);
+            loadShelvesAndSubjects();
+          }}
+        />
+      );
+    }
+    return <LandingPage onLoginClick={() => setShowAuthPage(true)} />;
+  }
+
   return (
     <div
       id="app-root-container"
@@ -282,7 +300,7 @@ export const App: React.FC = () => {
           }}
           onOpenSettings={() => setIsProfileModalOpen(true)}
           onOpenProfile={() => setIsProfileModalOpen(true)}
-          onOpenThemeModal={() => setIsThemeModalOpen(true)}
+          onOpenSubscription={() => setIsSubscriptionPageOpen(true)}
         />
       )}
 
@@ -471,9 +489,13 @@ export const App: React.FC = () => {
           user={user}
           onClose={() => setIsProfileModalOpen(false)}
           onUpdateUser={(updated) => setUser(updated)}
+          onOpenThemeModal={() => {
+            setIsProfileModalOpen(false);
+            setIsThemeModalOpen(true);
+          }}
           onLogout={() => {
             setIsProfileModalOpen(false);
-            setIsAuthModalOpen(true);
+            setUser(null);
           }}
         />
       )}
@@ -486,14 +508,11 @@ export const App: React.FC = () => {
         onClose={() => setIsThemeModalOpen(false)}
       />
 
-      {/* Auth Modal */}
-      {isAuthModalOpen && (
-        <AuthModal
-          onSuccess={(loggedUser) => {
-            setUser(loggedUser);
-            setIsAuthModalOpen(false);
-            loadShelvesAndSubjects();
-          }}
+      {/* Subscription Page */}
+      {isSubscriptionPageOpen && (
+        <SubscriptionPage
+          onClose={() => setIsSubscriptionPageOpen(false)}
+          currentPlan="free"
         />
       )}
 

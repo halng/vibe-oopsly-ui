@@ -18,6 +18,7 @@ interface ProfileSettingsModalProps {
   user: UserProfile;
   onClose: () => void;
   onUpdateUser: (updated: UserProfile) => void;
+  onOpenThemeModal: () => void;
   onLogout: () => void;
 }
 
@@ -25,6 +26,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
   user,
   onClose,
   onUpdateUser,
+  onOpenThemeModal,
   onLogout,
 }) => {
   const [displayName, setDisplayName] = useState(user.displayName);
@@ -199,6 +201,20 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsModalProps> = ({
             <h3 className="text-xs font-bold text-stone-400 uppercase tracking-wider">
               Experience
             </h3>
+
+            <div className="flex items-center justify-between p-3 bg-stone-50 rounded-2xl border border-stone-200/80">
+              <div className="flex items-center gap-2">
+                <Moon className="w-4 h-4 text-stone-500" />
+                <span className="font-bold text-stone-800">Visual Theme</span>
+              </div>
+              <button
+                type="button"
+                onClick={onOpenThemeModal}
+                className="px-3 py-1.5 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-700 text-xs font-bold transition-colors cursor-pointer"
+              >
+                Change Theme
+              </button>
+            </div>
 
             <div className="flex items-center justify-between p-3 bg-stone-50 rounded-2xl border border-stone-200/80">
               <div className="flex items-center gap-2">
