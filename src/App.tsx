@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { LibraryShelvesView } from './components/LibraryShelvesView';
 import { FlashcardReview } from './components/FlashcardReview';
@@ -32,7 +33,6 @@ export const App: React.FC = () => {
   // Authentication & Profile State
   const [user, setUser] = useState<UserProfile | null>(null);
   const [showAuthPage, setShowAuthPage] = useState(false);
-  const [isSubscriptionPageOpen, setIsSubscriptionPageOpen] = useState(false);
 
   // Tour State
   const [hasSeenTour, setHasSeenTour] = useState(() => {
@@ -42,9 +42,6 @@ export const App: React.FC = () => {
   // Theme State
   const [currentTheme, setCurrentTheme] = useState<ThemeId>(getSavedTheme);
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
-
-  // Navigation tab
-  const [activeTab, setActiveTab] = useState<'library' | 'study' | 'discover' | 'stats' | 'leaderboard'>('library');
 
   // Shelves and subjects
   const [shelves, setShelves] = useState<Shelf[]>([]);
@@ -97,9 +94,7 @@ export const App: React.FC = () => {
   const [subjectModalShelfId, setSubjectModalShelfId] = useState<string>('');
   const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
 
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-
-  // Initialize theme on mount
+  // Active Modals / Interactive Sub-screens
   useEffect(() => {
     applyTheme(currentTheme);
   }, [currentTheme]);
@@ -264,7 +259,22 @@ export const App: React.FC = () => {
     });
   };
 
-  if (!user && !isLoading) {
+  const handleLogout = () => {
+    setUser(null);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-4 border-stone-200 border-t-[#8BC34A] rounded-full animate-spin"></div>
+          <span className="text-stone-500 font-bold text-sm animate-pulse">Loading Oopsly...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
     if (showAuthPage) {
       return (
         <AuthPage
@@ -292,77 +302,90 @@ export const App: React.FC = () => {
       {user && (
         <Navbar
           user={user}
-          activeTab={activeTab}
-          onSelectTab={setActiveTab}
           onOpenNewShelf={() => {
             setEditingShelf(null);
             setIsShelfModalOpen(true);
           }}
-          onOpenSettings={() => setIsProfileModalOpen(true)}
-          onOpenProfile={() => setIsProfileModalOpen(true)}
-          onOpenSubscription={() => setIsSubscriptionPageOpen(true)}
         />
       )}
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 md:pb-8">
-        {activeTab === 'library' && (
-          <LibraryShelvesView
-            shelves={shelves}
-            subjects={subjects}
-            selectedShelfId={selectedShelfId}
-            onSelectShelf={setSelectedShelfId}
-            onOpenNewShelf={() => {
-              setEditingShelf(null);
-              setIsShelfModalOpen(true);
-            }}
-            onOpenEditShelf={(shelf) => {
-              setEditingShelf(shelf);
-              setIsShelfModalOpen(true);
-            }}
-            onDeleteShelf={handleDeleteShelf}
-            onOpenNewSubject={(shelfId) => {
-              setSubjectModalShelfId(shelfId);
-              setEditingSubject(null);
-              setIsSubjectModalOpen(true);
-            }}
-            onOpenEditSubject={(subj) => {
-              setEditingSubject(subj);
-              setSubjectModalShelfId(subj.shelfId);
-              setIsSubjectModalOpen(true);
-            }}
-            onDeleteSubject={handleDeleteSubject}
-            onStartReview={handleStartReview}
-            onStartLearnMode={handleStartLearn}
-            onStartMatchGame={handleStartMatch}
-            onStartTestSuite={handleStartTest}
-            onViewSubjectDetails={setActiveDetailsSubject}
-            onJoinMultiplayer={handleJoinMultiplayer}
-            onRefreshData={loadShelvesAndSubjects}
-          />
-        )}
+        <Routes>
+          <Route path="/" element={<Navigate to="/library" replace />} />
+          <Route path="/library" element={
+            <LibraryShelvesView
+              user={user!}
+              onUpdateUser={setUser}
+              shelves={shelves}
+              subjects={subjects}
+              selectedShelfId={selectedShelfId}
+              onSelectShelf={setSelectedShelfId}
+              onOpenNewShelf={() => {
+                setEditingShelf(null);
+                setIsShelfModalOpen(true);
+              }}
+              onOpenEditShelf={(shelf) => {
+                setEditingShelf(shelf);
+                setIsShelfModalOpen(true);
+              }}
+              onDeleteShelf={handleDeleteShelf}
+              onOpenNewSubject={(shelfId) => {
+                setSubjectModalShelfId(shelfId);
+                setEditingSubject(null);
+                setIsSubjectModalOpen(true);
+              }}
+              onOpenEditSubject={(subj) => {
+                setEditingSubject(subj);
+                setSubjectModalShelfId(subj.shelfId);
+                setIsSubjectModalOpen(true);
+              }}
+              onDeleteSubject={handleDeleteSubject}
+              onStartReview={handleStartReview}
+              onStartLearnMode={handleStartLearn}
+              onStartMatchGame={handleStartMatch}
+              onStartTestSuite={handleStartTest}
+              onViewSubjectDetails={setActiveDetailsSubject}
+              onJoinMultiplayer={handleJoinMultiplayer}
+              onRefreshData={loadShelvesAndSubjects}
+            />
+          } />
+          
+          <Route path="/study" element={
+            <StudyPomodoroView
+              subjects={subjects}
+              onRewardXp={handleRewardXp}
+              onRefreshData={loadShelvesAndSubjects}
+            />
+          } />
 
-        {activeTab === 'study' && (
-          <StudyPomodoroView
-            subjects={subjects}
-            onRewardXp={handleRewardXp}
-            onRefreshData={loadShelvesAndSubjects}
-          />
-        )}
+          <Route path="/discover" element={
+            <DiscoverCatalog
+              shelves={shelves}
+              onCloneSuccess={() => {
+                loadShelvesAndSubjects();
+              }}
+            />
+          } />
 
-        {activeTab === 'discover' && (
-          <DiscoverCatalog
-            shelves={shelves}
-            onCloneSuccess={() => {
-              loadShelvesAndSubjects();
-              setActiveTab('library');
-            }}
-          />
-        )}
+          <Route path="/stats" element={<StatsDashboard />} />
+          <Route path="/leaderboard" element={<LeaderboardView currentUser={user || undefined} />} />
+          
+          <Route path="/settings" element={
+            <ProfileSettingsModal
+              user={user}
+              onUpdateUser={setUser}
+              onOpenThemeModal={() => setIsThemeModalOpen(true)}
+              onLogout={handleLogout}
+            />
+          } />
 
-        {activeTab === 'stats' && <StatsDashboard />}
+          <Route path="/subscribe" element={
+            <SubscriptionPage onClose={() => window.history.back()} />
+          } />
 
-        {activeTab === 'leaderboard' && <LeaderboardView currentUser={user || undefined} />}
+          <Route path="*" element={<Navigate to="/library" replace />} />
+        </Routes>
       </main>
 
       {/* Footer */}
@@ -394,6 +417,7 @@ export const App: React.FC = () => {
         <ReviewCompleteScreen
           subject={reviewStatsComplete.subject}
           stats={reviewStatsComplete.stats}
+          dailyGoal={user?.settings?.dailyGoal || 20}
           onReturnToShelf={() => setReviewStatsComplete(null)}
           onPracticeAgain={() => {
             const subject = reviewStatsComplete.subject;
@@ -483,23 +507,6 @@ export const App: React.FC = () => {
         />
       )}
 
-      {/* Profile & Settings Modal */}
-      {isProfileModalOpen && user && (
-        <ProfileSettingsModal
-          user={user}
-          onClose={() => setIsProfileModalOpen(false)}
-          onUpdateUser={(updated) => setUser(updated)}
-          onOpenThemeModal={() => {
-            setIsProfileModalOpen(false);
-            setIsThemeModalOpen(true);
-          }}
-          onLogout={() => {
-            setIsProfileModalOpen(false);
-            setUser(null);
-          }}
-        />
-      )}
-
       {/* Theme Switcher Modal */}
       <ThemeModal
         isOpen={isThemeModalOpen}
@@ -507,14 +514,6 @@ export const App: React.FC = () => {
         onSelectTheme={handleSelectTheme}
         onClose={() => setIsThemeModalOpen(false)}
       />
-
-      {/* Subscription Page */}
-      {isSubscriptionPageOpen && (
-        <SubscriptionPage
-          onClose={() => setIsSubscriptionPageOpen(false)}
-          currentPlan="free"
-        />
-      )}
 
       {/* Offline Status & Background Sync Banner */}
       <OfflineSyncBanner

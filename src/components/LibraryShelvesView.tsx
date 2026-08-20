@@ -22,12 +22,16 @@ import {
   Zap,
   FileSpreadsheet,
   Copy,
+  Target,
 } from 'lucide-react';
-import { Shelf, Subject, Card } from '../types';
+import { Shelf, Subject, Card, UserProfile } from '../types';
+import { ApiService } from '../services/api';
 import { ImportCardsModal } from './ImportCardsModal';
 import { CloneSubjectModal } from './CloneSubjectModal';
 
 interface LibraryShelvesViewProps {
+  user: UserProfile;
+  onUpdateUser: (updated: UserProfile) => void;
   shelves: Shelf[];
   subjects: Subject[];
   selectedShelfId: string | null;
@@ -48,6 +52,8 @@ interface LibraryShelvesViewProps {
 }
 
 export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
+  user,
+  onUpdateUser,
   shelves,
   subjects,
   selectedShelfId,
@@ -69,6 +75,34 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
   const [shelfSearchQuery, setShelfSearchQuery] = useState('');
   const [subjectSearchQuery, setSubjectSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
+  const [reviewedToday, setReviewedToday] = React.useState(0);
+  const [isEditingGoal, setIsEditingGoal] = React.useState(false);
+  const [tempGoal, setTempGoal] = React.useState(user.settings?.dailyGoal || 20);
+
+  React.useEffect(() => {
+    ApiService.getStats().then((res) => {
+      if (res.isSuccess && res.data) {
+        setReviewedToday(res.data.reviewedToday);
+      }
+    });
+  }, [user.totalReviews]);
+
+  const handleSaveGoal = async () => {
+    try {
+      const newGoal = Math.max(1, tempGoal);
+      const res = await ApiService.updateSettings({ dailyGoal: newGoal });
+      if (res.isSuccess && res.data) {
+        onUpdateUser({
+          ...user,
+          settings: { ...user.settings, dailyGoal: newGoal }
+        });
+        setIsEditingGoal(false);
+      }
+    } catch (err) {
+      console.error('Failed to save goal', err);
+    }
+  };
   const [activeMenuShelfId, setActiveMenuShelfId] = useState<string | null>(null);
   const [activeMenuSubjectId, setActiveMenuSubjectId] = useState<string | null>(null);
   const [importingSubject, setImportingSubject] = useState<Subject | null>(null);
@@ -143,6 +177,86 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
       .reduce((acc, s) => acc + (s.dueCount || 0), 0);
   }, [subjects]);
 
+  const renderStudyGoalTracker = () => {
+    const dailyGoal = user.settings?.dailyGoal || 20;
+    const progress = Math.min((reviewedToday / dailyGoal) * 100, 100);
+
+    return (
+      <div className="bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-3xl p-5 mb-6 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Progress Background */}
+        <div 
+          className="absolute inset-0 bg-[#8BC34A]/5 dark:bg-[#8BC34A]/10 pointer-events-none transition-all duration-1000" 
+          style={{ width: `${progress}%` }} 
+        />
+        
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <Target className="w-6 h-6" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-stone-900 dark:text-stone-100">Daily Study Goal</h2>
+            <p className="text-sm text-stone-500 dark:text-stone-400">
+              {reviewedToday} of {dailyGoal} cards reviewed today
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 relative z-10 w-full md:w-auto">
+          <div className="flex-1 md:w-48 h-3 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[#8BC34A] rounded-full transition-all duration-1000 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <span className="text-sm font-bold text-stone-700 dark:text-stone-300 min-w-[3ch] text-right shrink-0">
+            {Math.round(progress)}%
+          </span>
+          <button 
+            onClick={() => setIsEditingGoal(true)}
+            className="ml-2 p-2 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl transition-colors cursor-pointer shrink-0"
+            title="Edit Daily Goal"
+          >
+            <Edit2 className="w-4 h-4 text-stone-500" />
+          </button>
+        </div>
+
+        {/* Goal Edit Inline/Modal */}
+        {isEditingGoal && (
+          <div className="absolute inset-0 bg-white dark:bg-stone-900 z-20 flex items-center justify-between px-6">
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-stone-900 dark:text-stone-100">Set Daily Target:</span>
+              <input
+                type="number"
+                min="1"
+                max="500"
+                value={tempGoal}
+                onChange={(e) => setTempGoal(parseInt(e.target.value) || 20)}
+                className="w-20 p-2 text-center bg-stone-100 dark:bg-stone-800 rounded-xl font-bold border border-stone-200 dark:border-stone-700 outline-none focus:ring-2 focus:ring-[#8BC34A]"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => {
+                  setIsEditingGoal(false);
+                  setTempGoal(user.settings?.dailyGoal || 20);
+                }}
+                className="px-4 py-2 text-sm font-bold text-stone-500 hover:text-stone-700 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleSaveGoal}
+                className="px-4 py-2 text-sm font-bold text-white bg-[#8BC34A] hover:bg-[#7CB342] rounded-xl shadow-xs cursor-pointer"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // ==========================================
   // VIEW 1: SHELF DETAILS (1:n SUBJECTS)
   // ==========================================
@@ -151,6 +265,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
 
     return (
       <div id="shelf-detail-view" className="space-y-6 animate-fade-in">
+        {renderStudyGoalTracker()}
         {/* Breadcrumb Navigation */}
         <div className="flex items-center justify-between gap-4">
           <button
@@ -380,14 +495,14 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
                   {/* Card Header */}
                   <div className="p-5 pb-3">
                     <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-2xs font-bold text-sm shrink-0"
                           style={{ backgroundColor: subject.color || '#8BC34A' }}
                         >
                           <Layers className="w-5 h-5" />
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <h3
                             onClick={() => onViewSubjectDetails(subject)}
                             className="text-base font-bold text-stone-900 dark:text-stone-100 group-hover:text-[#558B2F] dark:group-hover:text-[#8BC34A] transition-colors cursor-pointer line-clamp-1"
@@ -572,6 +687,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
   // ==========================================
   return (
     <div id="library-all-shelves-view" className="space-y-6 animate-fade-in">
+      {renderStudyGoalTracker()}
       {/* Header & Main Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -699,14 +815,14 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
 
                 <div className="p-6 pb-4">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3.5">
+                    <div className="flex items-center gap-3.5 min-w-0 flex-1">
                       <div
                         className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-2xs font-bold text-lg shrink-0 group-hover:scale-105 transition-transform"
                         style={{ backgroundColor: shelf.color || '#8BC34A' }}
                       >
                         <Folder className="w-6 h-6" />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 group-hover:text-[#558B2F] dark:group-hover:text-[#8BC34A] transition-colors line-clamp-1">
                           {shelf.name}
                         </h3>

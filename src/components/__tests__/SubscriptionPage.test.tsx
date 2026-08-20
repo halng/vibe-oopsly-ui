@@ -18,7 +18,7 @@ describe('SubscriptionPage Component', () => {
     expect(screen.getByText('$9.99')).toBeInTheDocument();
     
     // Click close
-    const closeBtn = screen.getByRole('button', { name: '' }); // X icon button doesn't have name right now, let's find it by some other means
+    const closeBtn = screen.getByRole('button', { name: /Back/i });
   });
   
   it('calls onClose when X button is clicked', () => {

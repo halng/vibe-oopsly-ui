@@ -195,29 +195,31 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
     >
       <div className="bg-white dark:bg-stone-900 rounded-3xl max-w-4xl w-full p-4 sm:p-8 shadow-2xl border border-stone-100 dark:border-stone-800 flex flex-col max-h-[92vh] overflow-hidden">
         {/* Header */}
-        <div className="flex items-start justify-between pb-3 sm:pb-4 border-b border-stone-100 dark:border-stone-800 shrink-0">
-          <div className="flex items-center gap-2.5 sm:gap-3">
+        <div className="flex items-start justify-between pb-3 sm:pb-4 border-b border-stone-100 dark:border-stone-800 shrink-0 gap-4">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
             <div
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center text-white font-bold shadow-xs shrink-0"
               style={{ backgroundColor: subject.color || '#8BC34A' }}
             >
               <Layers className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base sm:text-xl font-bold text-stone-900 dark:text-stone-100 line-clamp-1">
                   {subject.title}
                 </h2>
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400">
+                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 shrink-0">
                   {cards.length} Cards
                 </span>
               </div>
-              <div className="flex items-center gap-3 mt-0.5">
-                <p className="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 max-w-xl line-clamp-1">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mt-1.5 sm:mt-0.5">
+                <p className="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 max-w-xl line-clamp-2 sm:line-clamp-1">
                   {subject.description || 'No description provided.'}
                 </p>
                 {cards.length > 0 && (
-                  <D3ProgressBar mastered={masteredCards} total={cards.length} color={subject.color || '#8BC34A'} />
+                  <div className="shrink-0">
+                    <D3ProgressBar mastered={masteredCards} total={cards.length} color={subject.color || '#8BC34A'} />
+                  </div>
                 )}
               </div>
             </div>

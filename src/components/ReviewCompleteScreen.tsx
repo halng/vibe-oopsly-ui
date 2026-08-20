@@ -1,16 +1,8 @@
 import React, { useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import {
-  Trophy,
-  Zap,
-  CheckCircle2,
-  RotateCcw,
-  BookOpen,
-  ArrowRight,
-  Flame,
-  Timer,
-} from 'lucide-react';
+import { Trophy, Zap, CheckCircle2, RotateCcw, BookOpen, ArrowRight, Flame, Timer } from 'lucide-react';
 import { Subject, Grade } from '../types';
+import { ApiService } from '../services/api';
 
 interface ReviewCompleteScreenProps {
   subject: Subject;
@@ -20,6 +12,7 @@ interface ReviewCompleteScreenProps {
     gradeCounts: Record<Grade, number>;
     timeSpentSeconds?: number;
   };
+  dailyGoal: number;
   onReturnToShelf: () => void;
   onPracticeAgain: () => void;
 }
@@ -27,18 +20,30 @@ interface ReviewCompleteScreenProps {
 export const ReviewCompleteScreen: React.FC<ReviewCompleteScreenProps> = ({
   subject,
   stats,
+  dailyGoal,
   onReturnToShelf,
   onPracticeAgain,
 }) => {
   useEffect(() => {
-    // Launch festive celebration confetti
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#8BC34A', '#FF9800', '#03A9F4', '#4CAF50'],
+    ApiService.getStats().then((res: any) => {
+      if (res.isSuccess && res.data) {
+        const statsData = res.data;
+        const currentReviewed = statsData.reviewedToday ?? statsData.totalStudiedToday ?? 0;
+        const previousReviewed = currentReviewed - (stats.totalReviewed || 0);
+        
+        // Launch confetti if they just crossed their daily goal during this session
+        if (previousReviewed < dailyGoal && currentReviewed >= dailyGoal) {
+          confetti({
+            particleCount: 150,
+            spread: 90,
+            origin: { y: 0.6 },
+            colors: ['#8BC34A', '#FF9800', '#03A9F4', '#4CAF50'],
+            zIndex: 9999,
+          });
+        }
+      }
     });
-  }, []);
+  }, [dailyGoal, stats.totalReviewed]);
 
   const total = stats.totalReviewed || 1;
   const goodOrEasy = (stats.gradeCounts[3] || 0) + (stats.gradeCounts[4] || 0);

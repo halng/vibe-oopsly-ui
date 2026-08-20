@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Sparkles,
   Flame,
@@ -29,23 +30,14 @@ import { ApiService } from '../services/api';
 
 interface NavbarProps {
   user: UserProfile;
-  activeTab: 'library' | 'study' | 'discover' | 'stats' | 'leaderboard';
-  onSelectTab: (tab: 'library' | 'study' | 'discover' | 'stats' | 'leaderboard') => void;
   onOpenNewShelf: () => void;
-  onOpenSettings: () => void;
-  onOpenProfile: () => void;
-  onOpenSubscription?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   user,
-  activeTab,
-  onSelectTab,
   onOpenNewShelf,
-  onOpenSettings,
-  onOpenProfile,
-  onOpenSubscription,
 }) => {
+  const navigate = useNavigate();
   const { isOnline, isSyncing, pendingCount, syncNow } = useSyncStatus();
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
   const [reviewedToday, setReviewedToday] = React.useState(0);
@@ -64,6 +56,28 @@ export const Navbar: React.FC<NavbarProps> = ({
   const circleCircumference = 2 * Math.PI * circleRadius;
   const strokeDashoffset = circleCircumference - (progressPercentage / 100) * circleCircumference;
 
+  const navLinkClass = ({ isActive }: { isActive: boolean }) => 
+    `flex items-center gap-2 px-3 lg:px-3.5 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
+      isActive
+        ? 'shadow-2xs'
+        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800'
+    }`;
+
+  const navLinkStyle = ({ isActive }: { isActive: boolean }) => 
+    isActive
+      ? {
+          backgroundColor: 'var(--theme-subtle)',
+          color: 'var(--theme-accent)',
+        }
+      : undefined;
+
+  const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `flex flex-col items-center justify-center min-w-[50px] min-h-[44px] py-1 px-1.5 rounded-xl transition-all cursor-pointer ${
+      isActive
+        ? 'font-bold'
+        : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
+    }`;
+
   return (
     <>
       <header
@@ -78,10 +92,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center justify-between h-16">
             {/* Brand Logo & Name */}
             <div className="flex items-center gap-4 sm:gap-6">
-              <button
+              <NavLink
+                to="/library"
                 id="brand-logo-btn"
                 data-testid="brand-logo"
-                onClick={() => onSelectTab('library')}
                 className="flex items-center gap-2 sm:gap-2.5 group cursor-pointer focus:outline-none"
               >
                 <div
@@ -107,123 +121,72 @@ export const Navbar: React.FC<NavbarProps> = ({
                     Active Recall & SRS
                   </span>
                 </div>
-              </button>
+              </NavLink>
 
               {/* Desktop Navigation Tabs */}
               <nav className="hidden md:flex items-center gap-1 ml-2 lg:ml-4" aria-label="Main Navigation">
-                <button
+                <NavLink
+                  to="/library"
                   id="nav-tab-library"
                   data-testid="nav-library"
-                  onClick={() => onSelectTab('library')}
-                  style={
-                    activeTab === 'library'
-                      ? {
-                          backgroundColor: 'var(--theme-subtle)',
-                          color: 'var(--theme-accent)',
-                        }
-                      : undefined
-                  }
-                  className={`flex items-center gap-2 px-3 lg:px-3.5 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
-                    activeTab === 'library'
-                      ? 'shadow-2xs'
-                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800'
-                  }`}
+                  style={navLinkStyle}
+                  className={navLinkClass}
                 >
                   <BookOpen className="w-4 h-4" />
                   <span>My Library</span>
-                </button>
+                </NavLink>
 
-                <button
+                <NavLink
+                  to="/study"
                   id="nav-tab-study"
                   data-testid="nav-study"
-                  onClick={() => onSelectTab('study')}
-                  style={
-                    activeTab === 'study'
-                      ? {
-                          backgroundColor: 'var(--theme-subtle)',
-                          color: 'var(--theme-accent)',
-                        }
-                      : undefined
-                  }
-                  className={`flex items-center gap-2 px-3 lg:px-3.5 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer relative ${
-                    activeTab === 'study'
-                      ? 'shadow-2xs'
-                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800'
-                  }`}
+                  style={navLinkStyle}
+                  className={({ isActive }) => `${navLinkClass({ isActive })} relative`}
                 >
-                  <Sprout className="w-4 h-4" style={{ color: 'var(--theme-accent)' }} />
-                  <span>Study & Garden</span>
-                  <span
-                    className="w-2 h-2 rounded-full animate-pulse"
-                    style={{ backgroundColor: 'var(--theme-accent)' }}
-                  ></span>
-                </button>
+                  {({ isActive }) => (
+                    <>
+                      <Sprout className="w-4 h-4" style={{ color: isActive ? 'inherit' : 'var(--theme-accent)' }} />
+                      <span>Study & Garden</span>
+                      <span
+                        className="w-2 h-2 rounded-full animate-pulse"
+                        style={{ backgroundColor: 'var(--theme-accent)' }}
+                      ></span>
+                    </>
+                  )}
+                </NavLink>
 
-                <button
+                <NavLink
+                  to="/discover"
                   id="nav-tab-discover"
                   data-testid="nav-discover"
-                  onClick={() => onSelectTab('discover')}
-                  style={
-                    activeTab === 'discover'
-                      ? {
-                          backgroundColor: 'var(--theme-subtle)',
-                          color: 'var(--theme-accent)',
-                        }
-                      : undefined
-                  }
-                  className={`flex items-center gap-2 px-3 lg:px-3.5 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
-                    activeTab === 'discover'
-                      ? 'shadow-2xs'
-                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800'
-                  }`}
+                  style={navLinkStyle}
+                  className={navLinkClass}
                 >
                   <Compass className="w-4 h-4" />
                   <span>Discover</span>
-                </button>
+                </NavLink>
 
-                <button
+                <NavLink
+                  to="/leaderboard"
                   id="nav-tab-leaderboard"
                   data-testid="nav-leaderboard"
-                  onClick={() => onSelectTab('leaderboard')}
-                  style={
-                    activeTab === 'leaderboard'
-                      ? {
-                          backgroundColor: 'var(--theme-subtle)',
-                          color: 'var(--theme-accent)',
-                        }
-                      : undefined
-                  }
-                  className={`flex items-center gap-2 px-3 lg:px-3.5 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
-                    activeTab === 'leaderboard'
-                      ? 'shadow-2xs'
-                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800'
-                  }`}
+                  style={navLinkStyle}
+                  className={navLinkClass}
                 >
                   <Trophy className="w-4 h-4" />
                   <span>Leaderboard</span>
-                </button>
+                </NavLink>
 
-                <button
+                <NavLink
+                  to="/stats"
                   id="nav-tab-stats"
                   data-testid="nav-stats"
-                  onClick={() => onSelectTab('stats')}
-                  style={
-                    activeTab === 'stats'
-                      ? {
-                          backgroundColor: 'var(--theme-subtle)',
-                          color: 'var(--theme-accent)',
-                        }
-                      : undefined
-                  }
-                  className={`flex items-center gap-2 px-3 lg:px-3.5 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
-                    activeTab === 'stats'
-                      ? 'shadow-2xs'
-                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800'
-                  }`}
+                  style={navLinkStyle}
+                  className={navLinkClass}
                 >
                   <BarChart3 className="w-4 h-4" />
                   <span>Stats</span>
-                </button>
+                </NavLink>
               </nav>
             </div>
 
@@ -364,21 +327,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
 
               {/* Upgrade to Pro */}
-              {onOpenSubscription && (
-                <button
-                  onClick={onOpenSubscription}
-                  className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#8BC34A]/10 text-[#558B2F] dark:text-[#8BC34A] hover:bg-[#8BC34A]/20 transition-colors text-xs font-bold cursor-pointer border border-[#8BC34A]/20"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Pro</span>
-                </button>
-              )}
+              <button
+                onClick={() => navigate('/subscribe')}
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#8BC34A]/10 text-[#558B2F] dark:text-[#8BC34A] hover:bg-[#8BC34A]/20 transition-colors text-xs font-bold cursor-pointer border border-[#8BC34A]/20"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Pro</span>
+              </button>
 
               {/* User Profile Avatar / Menu */}
               <button
                 id="user-profile-btn"
                 data-testid="btn-user-profile"
-                onClick={onOpenProfile}
+                onClick={() => navigate('/settings')}
                 style={{ borderColor: 'var(--theme-border)' }}
                 className="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-full border hover:opacity-90 transition-colors cursor-pointer"
               >
@@ -396,7 +357,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 id="nav-settings-btn"
                 data-testid="btn-settings"
-                onClick={onOpenSettings}
+                onClick={() => navigate('/settings')}
                 title="Settings"
                 className="p-2 rounded-xl text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors cursor-pointer"
               >
@@ -417,110 +378,59 @@ export const Navbar: React.FC<NavbarProps> = ({
         className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-md border-t px-2 py-1.5 md:hidden flex items-center justify-around shadow-lg pb-[max(0.5rem,env(safe-area-inset-bottom))]"
         aria-label="Mobile Navigation"
       >
-        <button
+        <NavLink
+          to="/library"
           id="mobile-nav-library"
-          onClick={() => onSelectTab('library')}
-          style={
-            activeTab === 'library'
-              ? {
-                  backgroundColor: 'var(--theme-subtle)',
-                  color: 'var(--theme-accent)',
-                }
-              : undefined
-          }
-          className={`flex flex-col items-center justify-center min-w-[50px] min-h-[44px] py-1 px-1.5 rounded-xl transition-all cursor-pointer ${
-            activeTab === 'library'
-              ? 'font-bold'
-              : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
-          }`}
+          style={navLinkStyle}
+          className={mobileNavLinkClass}
         >
           <BookOpen className="w-5 h-5" />
           <span className="text-[9px] mt-0.5">Library</span>
-        </button>
+        </NavLink>
 
-        <button
+        <NavLink
+          to="/study"
           id="mobile-nav-study"
-          onClick={() => onSelectTab('study')}
-          style={
-            activeTab === 'study'
-              ? {
-                  backgroundColor: 'var(--theme-subtle)',
-                  color: 'var(--theme-accent)',
-                }
-              : undefined
-          }
-          className={`flex flex-col items-center justify-center min-w-[50px] min-h-[44px] py-1 px-1.5 rounded-xl transition-all cursor-pointer ${
-            activeTab === 'study'
-              ? 'font-bold'
-              : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
-          }`}
+          style={navLinkStyle}
+          className={mobileNavLinkClass}
         >
-          <Sprout className="w-5 h-5" style={{ color: activeTab === 'study' ? 'var(--theme-accent)' : undefined }} />
-          <span className="text-[9px] mt-0.5">Study</span>
-        </button>
+          {({ isActive }) => (
+            <>
+              <Sprout className="w-5 h-5" style={{ color: isActive ? 'inherit' : undefined }} />
+              <span className="text-[9px] mt-0.5">Study</span>
+            </>
+          )}
+        </NavLink>
 
-        <button
+        <NavLink
+          to="/discover"
           id="mobile-nav-discover"
-          onClick={() => onSelectTab('discover')}
-          style={
-            activeTab === 'discover'
-              ? {
-                  backgroundColor: 'var(--theme-subtle)',
-                  color: 'var(--theme-accent)',
-                }
-              : undefined
-          }
-          className={`flex flex-col items-center justify-center min-w-[50px] min-h-[44px] py-1 px-1.5 rounded-xl transition-all cursor-pointer ${
-            activeTab === 'discover'
-              ? 'font-bold'
-              : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
-          }`}
+          style={navLinkStyle}
+          className={mobileNavLinkClass}
         >
           <Compass className="w-5 h-5" />
           <span className="text-[9px] mt-0.5">Discover</span>
-        </button>
+        </NavLink>
 
-        <button
+        <NavLink
+          to="/leaderboard"
           id="mobile-nav-leaderboard"
-          onClick={() => onSelectTab('leaderboard')}
-          style={
-            activeTab === 'leaderboard'
-              ? {
-                  backgroundColor: 'var(--theme-subtle)',
-                  color: 'var(--theme-accent)',
-                }
-              : undefined
-          }
-          className={`flex flex-col items-center justify-center min-w-[50px] min-h-[44px] py-1 px-1.5 rounded-xl transition-all cursor-pointer ${
-            activeTab === 'leaderboard'
-              ? 'font-bold'
-              : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
-          }`}
+          style={navLinkStyle}
+          className={mobileNavLinkClass}
         >
           <Trophy className="w-5 h-5" />
           <span className="text-[9px] mt-0.5">Ranking</span>
-        </button>
+        </NavLink>
 
-        <button
+        <NavLink
+          to="/stats"
           id="mobile-nav-stats"
-          onClick={() => onSelectTab('stats')}
-          style={
-            activeTab === 'stats'
-              ? {
-                  backgroundColor: 'var(--theme-subtle)',
-                  color: 'var(--theme-accent)',
-                }
-              : undefined
-          }
-          className={`flex flex-col items-center justify-center min-w-[50px] min-h-[44px] py-1 px-1.5 rounded-xl transition-all cursor-pointer ${
-            activeTab === 'stats'
-              ? 'font-bold'
-              : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200'
-          }`}
+          style={navLinkStyle}
+          className={mobileNavLinkClass}
         >
           <BarChart3 className="w-5 h-5" />
           <span className="text-[9px] mt-0.5">Stats</span>
-        </button>
+        </NavLink>
       </nav>
 
       {isCalendarOpen && (
