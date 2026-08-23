@@ -327,7 +327,7 @@ export const GhibliGardenView: React.FC<GhibliGardenViewProps> = ({
       {/* Toast notification */}
       {toastMessage && (
         <div className="fixed top-20 right-6 z-50 px-4 py-2.5 rounded-2xl bg-stone-900/90 dark:bg-stone-100/90 text-white dark:text-stone-900 text-xs font-bold shadow-xl backdrop-blur-md flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
-          <Sparkles className="w-4 h-4 text-[#8BC34A]" />
+          <Sparkles className="w-4 h-4 text-[var(--theme-accent)]" />
           <span>{toastMessage}</span>
         </div>
       )}
@@ -340,7 +340,7 @@ export const GhibliGardenView: React.FC<GhibliGardenViewProps> = ({
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5B8C32]/15 text-[#5B8C32] dark:text-[#8BC34A] text-xs font-black uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5B8C32]/15 text-[#5B8C32] dark:text-[var(--theme-accent)] text-xs font-black uppercase tracking-wider">
               <Sprout className="w-4 h-4" />
               <span>Forest Sanctuary · Pomodoro Garden</span>
             </div>

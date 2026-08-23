@@ -101,15 +101,15 @@ export const OfflineSyncBanner: React.FC<OfflineSyncBannerProps> = ({ onDataSync
             <div className="flex items-start gap-2.5">
               <div
                 className={`p-2 rounded-xl shrink-0 ${
-                  !isOnline ? 'bg-amber-600' : 'bg-stone-800 text-[#8BC34A]'
+                  !isOnline ? 'bg-amber-600' : 'bg-stone-800 text-[var(--theme-accent)]'
                 }`}
               >
                 {!isOnline ? (
                   <WifiOff className="w-4 h-4" />
                 ) : isSyncing ? (
-                  <RefreshCw className="w-4 h-4 animate-spin text-[#8BC34A]" />
+                  <RefreshCw className="w-4 h-4 animate-spin text-[var(--theme-accent)]" />
                 ) : (
-                  <Database className="w-4 h-4 text-[#8BC34A]" />
+                  <Database className="w-4 h-4 text-[var(--theme-accent)]" />
                 )}
               </div>
 
@@ -167,7 +167,7 @@ export const OfflineSyncBanner: React.FC<OfflineSyncBannerProps> = ({ onDataSync
               className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
                 !isOnline
                   ? 'bg-white/20 text-white hover:bg-white/30'
-                  : 'bg-[#8BC34A] text-stone-950 hover:bg-[#9CCC65] shadow-xs'
+                  : 'bg-[var(--theme-accent)] text-stone-950 hover:bg-[#9CCC65] shadow-xs'
               } disabled:opacity-50`}
             >
               <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin' : ''}`} />

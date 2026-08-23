@@ -74,6 +74,9 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
 }) => {
   const [shelfSearchQuery, setShelfSearchQuery] = useState('');
   const [subjectSearchQuery, setSubjectSearchQuery] = useState('');
+  const [globalSubjectSearchQuery, setGlobalSubjectSearchQuery] = useState('');
+  const [draggedSubjectId, setDraggedSubjectId] = useState<string | null>(null);
+  const [dragOverShelfId, setDragOverShelfId] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const [reviewedToday, setReviewedToday] = React.useState(0);
@@ -109,7 +112,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
   const [selectedSubjectToClone, setSelectedSubjectToClone] = useState<Subject | null>(null);
 
   // Active Shelf object when a shelf is opened
-  const activeShelf = useMemo(() => {
+  const activeShelf = useMemo<Shelf | null>(() => {
     if (!selectedShelfId) return null;
     return shelves.find((s) => s.id === selectedShelfId && !s.isDeleted) || null;
   }, [shelves, selectedShelfId]);
@@ -156,6 +159,28 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
   }, [subjects, activeShelf, subjectSearchQuery, selectedTag]);
 
   // Tags in current active shelf
+  
+  // Filter subjects globally across all shelves
+  const globalFilteredSubjects = useMemo(() => {
+    if (!globalSubjectSearchQuery.trim()) return [];
+    const query = globalSubjectSearchQuery.toLowerCase();
+    return subjects.filter((s) => {
+      if (s.isDeleted) return false;
+      const matchesSearch =
+        s.title.toLowerCase().includes(query) ||
+        (s.description && s.description.toLowerCase().includes(query)) ||
+        (s.tags && s.tags.some((t) => t.toLowerCase().includes(query)));
+      return matchesSearch;
+    });
+  }, [subjects, globalSubjectSearchQuery]);
+
+  const recentSubjects = useMemo(() => {
+    return subjects
+      .filter((s) => !s.isDeleted)
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      .slice(0, 3);
+  }, [subjects]);
+
   const activeShelfTags = useMemo(() => {
     if (!activeShelf) return [];
     const tagsSet = new Set<string>();
@@ -177,313 +202,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
       .reduce((acc, s) => acc + (s.dueCount || 0), 0);
   }, [subjects]);
 
-  const renderStudyGoalTracker = () => {
-    const dailyGoal = user.settings?.dailyGoal || 20;
-    const progress = Math.min((reviewedToday / dailyGoal) * 100, 100);
-
-    return (
-      <div className="bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-3xl p-5 mb-6 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Progress Background */}
-        <div 
-          className="absolute inset-0 bg-[#8BC34A]/5 dark:bg-[#8BC34A]/10 pointer-events-none transition-all duration-1000" 
-          style={{ width: `${progress}%` }} 
-        />
-        
-        <div className="flex items-center gap-4 relative z-10">
-          <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-            <Target className="w-6 h-6" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-stone-900 dark:text-stone-100">Daily Study Goal</h2>
-            <p className="text-sm text-stone-500 dark:text-stone-400">
-              {reviewedToday} of {dailyGoal} cards reviewed today
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 relative z-10 w-full md:w-auto">
-          <div className="flex-1 md:w-48 h-3 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-[#8BC34A] rounded-full transition-all duration-1000 ease-out"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <span className="text-sm font-bold text-stone-700 dark:text-stone-300 min-w-[3ch] text-right shrink-0">
-            {Math.round(progress)}%
-          </span>
-          <button 
-            onClick={() => setIsEditingGoal(true)}
-            className="ml-2 p-2 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl transition-colors cursor-pointer shrink-0"
-            title="Edit Daily Goal"
-          >
-            <Edit2 className="w-4 h-4 text-stone-500" />
-          </button>
-        </div>
-
-        {/* Goal Edit Inline/Modal */}
-        {isEditingGoal && (
-          <div className="absolute inset-0 bg-white dark:bg-stone-900 z-20 flex items-center justify-between px-6">
-            <div className="flex items-center gap-3">
-              <span className="font-bold text-stone-900 dark:text-stone-100">Set Daily Target:</span>
-              <input
-                type="number"
-                min="1"
-                max="500"
-                value={tempGoal}
-                onChange={(e) => setTempGoal(parseInt(e.target.value) || 20)}
-                className="w-20 p-2 text-center bg-stone-100 dark:bg-stone-800 rounded-xl font-bold border border-stone-200 dark:border-stone-700 outline-none focus:ring-2 focus:ring-[#8BC34A]"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={() => {
-                  setIsEditingGoal(false);
-                  setTempGoal(user.settings?.dailyGoal || 20);
-                }}
-                className="px-4 py-2 text-sm font-bold text-stone-500 hover:text-stone-700 cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleSaveGoal}
-                className="px-4 py-2 text-sm font-bold text-white bg-[#8BC34A] hover:bg-[#7CB342] rounded-xl shadow-xs cursor-pointer"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  // ==========================================
-  // VIEW 1: SHELF DETAILS (1:n SUBJECTS)
-  // ==========================================
-  if (activeShelf) {
-    const stats = shelfStatsMap.get(activeShelf.id) || { subjectCount: 0, cardCount: 0, dueCount: 0 };
-
-    return (
-      <div id="shelf-detail-view" className="space-y-6 animate-fade-in">
-        {renderStudyGoalTracker()}
-        {/* Breadcrumb Navigation */}
-        <div className="flex items-center justify-between gap-4">
-          <button
-            id="back-to-shelves-btn"
-            data-testid="btn-back-to-shelves"
-            onClick={() => onSelectShelf(null)}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:bg-stone-50 dark:hover:bg-stone-800 text-xs font-bold text-stone-700 dark:text-stone-300 transition-colors cursor-pointer shadow-2xs group"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-            <span>All Shelves</span>
-          </button>
-
-          <div className="flex items-center gap-2">
-            <button
-              id="edit-shelf-btn"
-              onClick={() => onOpenEditShelf(activeShelf)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-800 text-xs font-semibold text-stone-700 dark:text-stone-300 transition-colors cursor-pointer"
-            >
-              <Edit2 className="w-3.5 h-3.5 text-stone-500" />
-              <span>Edit Shelf</span>
-            </button>
-            <button
-              id="create-subject-in-shelf-btn"
-              data-testid="btn-create-subject-in-shelf"
-              onClick={() => onOpenNewSubject(activeShelf.id)}
-              className="flex items-center gap-2 px-4 py-1.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>New Subject</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Shelf Banner Card */}
-        <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-200/80 dark:border-stone-800 shadow-xs relative overflow-hidden">
-          <div
-            className="absolute top-0 left-0 w-2 h-full"
-            style={{ backgroundColor: activeShelf.color || '#8BC34A' }}
-          />
-
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-start gap-4">
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold shadow-xs shrink-0 text-lg"
-                style={{ backgroundColor: activeShelf.color || '#8BC34A' }}
-              >
-                <Folder className="w-6 h-6" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold text-stone-900 dark:text-stone-100 tracking-tight">
-                    {activeShelf.name}
-                  </h1>
-                  <span className="px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold">
-                    Shelf
-                  </span>
-                </div>
-                <p className="text-sm text-stone-500 dark:text-stone-400 mt-1 max-w-2xl leading-relaxed">
-                  {activeShelf.description || 'Collection of subjects, flashcard decks, and practice tests.'}
-                </p>
-              </div>
-            </div>
-
-            {/* Quick Metrics */}
-            <div className="flex items-center gap-3 self-start md:self-center">
-              <div className="px-3.5 py-2 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200/60 dark:border-stone-700/60 text-center min-w-[75px]">
-                <div className="text-base font-extrabold text-stone-900 dark:text-stone-100">
-                  {stats.subjectCount}
-                </div>
-                <div className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
-                  Subjects
-                </div>
-              </div>
-
-              <div className="px-3.5 py-2 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200/60 dark:border-stone-700/60 text-center min-w-[75px]">
-                <div className="text-base font-extrabold text-stone-900 dark:text-stone-100">
-                  {stats.cardCount}
-                </div>
-                <div className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
-                  Cards
-                </div>
-              </div>
-
-              <div className="px-3.5 py-2 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800 text-center min-w-[75px]">
-                <div className="text-base font-extrabold text-amber-800 dark:text-amber-400">
-                  {stats.dueCount}
-                </div>
-                <div className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-500 tracking-wider">
-                  Due FSRS
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Due Cards Active Recall Alert Banner if cards need review in this shelf */}
-        {activeShelfTotalDue > 0 && (
-          <div
-            id="due-cards-alert-banner"
-            className="bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-[#8BC34A]/15 border border-[#8BC34A]/40 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs"
-          >
-            <div className="flex items-center gap-3.5 text-left w-full sm:w-auto">
-              <div className="w-10 h-10 rounded-xl bg-[#8BC34A] flex items-center justify-center text-white shrink-0 shadow-xs">
-                <Clock className="w-5 h-5 animate-spin-slow" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
-                  <span>{activeShelfTotalDue} Cards Due in {activeShelf.name}</span>
-                  <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200">
-                    FSRS Review
-                  </span>
-                </h3>
-                <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5">
-                  Maintain your memory retention curve with active recall practice.
-                </p>
-              </div>
-            </div>
-
-            <button
-              id="quick-start-shelf-review-btn"
-              data-testid="btn-quick-shelf-review"
-              onClick={() => {
-                const firstDueSubject = filteredSubjectsInActiveShelf.find((s) => s.dueCount > 0);
-                if (firstDueSubject) onStartReview(firstDueSubject);
-              }}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-sm shadow-[#8BC34A]/30 transition-all cursor-pointer hover:scale-[1.02]"
-            >
-              <Play className="w-4 h-4 fill-white" />
-              <span>Start Review Session</span>
-            </button>
-          </div>
-        )}
-
-        {/* Subjects Search & Tag Filter Toolbar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              id="search-subjects-in-shelf-input"
-              data-testid="search-subjects-input"
-              type="text"
-              placeholder={`Search ${stats.subjectCount} subjects in this shelf...`}
-              value={subjectSearchQuery}
-              onChange={(e) => setSubjectSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#8BC34A] focus:border-transparent transition-all"
-            />
-            {subjectSearchQuery && (
-              <button
-                onClick={() => setSubjectSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Tag Filters */}
-        {activeShelfTags.length > 0 && (
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mr-1 flex items-center gap-1">
-              <Tag className="w-3 h-3" />
-              Tags:
-            </span>
-            <button
-              onClick={() => setSelectedTag(null)}
-              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                selectedTag === null
-                  ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900'
-                  : 'bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-600 dark:text-stone-300'
-              }`}
-            >
-              All
-            </button>
-            {activeShelfTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                  selectedTag === tag
-                    ? 'bg-[#8BC34A] text-white'
-                    : 'bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-600 dark:text-stone-300'
-                }`}
-              >
-                #{tag}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Subjects Grid (1:n) */}
-        {filteredSubjectsInActiveShelf.length === 0 ? (
-          <div
-            id="empty-shelf-subjects-state"
-            className="bg-white dark:bg-stone-900 rounded-3xl border border-dashed border-stone-300 dark:border-stone-800 p-12 text-center flex flex-col items-center justify-center space-y-4"
-          >
-            <div className="w-14 h-14 rounded-2xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-400">
-              <BookOpen className="w-7 h-7" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-stone-800 dark:text-stone-200">
-                No subjects in this shelf yet
-              </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mt-1">
-                Create a subject deck to start adding flashcards, test suites, and adaptive quizzes.
-              </p>
-            </div>
-            <button
-              onClick={() => onOpenNewSubject(activeShelf.id)}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold transition-colors cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Create First Subject</span>
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredSubjectsInActiveShelf.map((subject) => {
+  const renderSubjectCard = (subject: Subject) => {
               const hasDue = subject.dueCount > 0;
               return (
                 <div
@@ -498,14 +217,14 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-2xs font-bold text-sm shrink-0"
-                          style={{ backgroundColor: subject.color || '#8BC34A' }}
+                          style={{ backgroundColor: subject.color || 'var(--theme-accent)' }}
                         >
                           <Layers className="w-5 h-5" />
                         </div>
                         <div className="min-w-0">
                           <h3
                             onClick={() => onViewSubjectDetails(subject)}
-                            className="text-base font-bold text-stone-900 dark:text-stone-100 group-hover:text-[#558B2F] dark:group-hover:text-[#8BC34A] transition-colors cursor-pointer line-clamp-1"
+                            className="text-base font-bold text-stone-900 dark:text-stone-100 group-hover:text-[var(--theme-secondary)] dark:group-hover:text-[var(--theme-accent)] transition-colors cursor-pointer line-clamp-1"
                           >
                             {subject.title}
                           </h3>
@@ -564,7 +283,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
                                 setActiveMenuSubjectId(null);
                                 setSelectedSubjectToClone(subject);
                               }}
-                              className="w-full flex items-center gap-2 px-3 py-2 hover:bg-stone-50 dark:hover:bg-stone-700 text-left text-[#558B2F] dark:text-[#8BC34A] cursor-pointer"
+                              className="w-full flex items-center gap-2 px-3 py-2 hover:bg-stone-50 dark:hover:bg-stone-700 text-left text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] cursor-pointer"
                             >
                               <Copy className="w-3.5 h-3.5" />
                               <span>Clone to Shelf</span>
@@ -624,7 +343,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
                       id={`review-btn-${subject.id}`}
                       data-testid={`btn-review-${subject.id}`}
                       onClick={() => onStartReview(subject)}
-                      className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer"
+                      className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer"
                     >
                       <Play className="w-3.5 h-3.5 fill-white" />
                       <span>{hasDue ? `Review Due (${subject.dueCount})` : 'Practice All Cards'}</span>
@@ -675,24 +394,331 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
                   </div>
                 </div>
               );
-            })}
+  };
+
+  const renderStudyGoalTracker = () => {
+    const dailyGoal = user.settings?.dailyGoal || 20;
+    const progress = Math.min((reviewedToday / dailyGoal) * 100, 100);
+
+    return (
+      <div className="bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 rounded-3xl p-5 mb-6 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Progress Background */}
+        <div 
+          className="absolute inset-0 bg-[color-mix(in_srgb,var(--theme-accent)_5%,transparent)] dark:bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] pointer-events-none transition-all duration-1000" 
+          style={{ width: `${progress}%` }} 
+        />
+        
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <Target className="w-6 h-6" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-stone-900 dark:text-stone-100">Daily Study Goal</h2>
+            <p className="text-sm text-stone-500 dark:text-stone-400">
+              {reviewedToday} of {dailyGoal} cards reviewed today
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 relative z-10 w-full md:w-auto">
+          <div className="flex-1 md:w-48 h-3 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-[var(--theme-accent)] rounded-full transition-all duration-1000 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <span className="text-sm font-bold text-stone-700 dark:text-stone-300 min-w-[3ch] text-right shrink-0">
+            {Math.round(progress)}%
+          </span>
+          <button 
+            onClick={() => setIsEditingGoal(true)}
+            className="ml-2 p-2 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl transition-colors cursor-pointer shrink-0"
+            title="Edit Daily Goal"
+          >
+            <Edit2 className="w-4 h-4 text-stone-500" />
+          </button>
+        </div>
+
+        {/* Goal Edit Inline/Modal */}
+        {isEditingGoal && (
+          <div className="absolute inset-0 bg-white dark:bg-stone-900 z-20 flex items-center justify-between px-6">
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-stone-900 dark:text-stone-100">Set Daily Target:</span>
+              <input
+                type="number"
+                min="1"
+                max="500"
+                value={tempGoal}
+                onChange={(e) => setTempGoal(parseInt(e.target.value) || 20)}
+                className="w-20 p-2 text-center bg-stone-100 dark:bg-stone-800 rounded-xl font-bold border border-stone-200 dark:border-stone-700 outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => {
+                  setIsEditingGoal(false);
+                  setTempGoal(user.settings?.dailyGoal || 20);
+                }}
+                className="px-4 py-2 text-sm font-bold text-stone-500 hover:text-stone-700 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleSaveGoal}
+                className="px-4 py-2 text-sm font-bold text-white bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] rounded-xl shadow-xs cursor-pointer"
+              >
+                Save
+              </button>
+            </div>
           </div>
         )}
       </div>
     );
-  }
+  };
 
   // ==========================================
-  // VIEW 2: ALL SHELVES (LEVEL 1)
+  // VIEW 1: SHELF DETAILS (1:n SUBJECTS)
   // ==========================================
+  const activeShelfStats = activeShelf 
+    ? (shelfStatsMap.get(activeShelf.id) || { subjectCount: 0, cardCount: 0, dueCount: 0 }) 
+    : { subjectCount: 0, cardCount: 0, dueCount: 0 };
+  const stats = activeShelfStats;
+
   return (
-    <div id="library-all-shelves-view" className="space-y-6 animate-fade-in">
-      {renderStudyGoalTracker()}
-      {/* Header & Main Actions */}
+    <>
+      {activeShelf ? (
+
+      <div id="shelf-detail-view" className="space-y-6 animate-fade-in">
+        {renderStudyGoalTracker()}
+        {/* Breadcrumb Navigation */}
+        <div className="flex items-center justify-between gap-4">
+          <button
+            id="back-to-shelves-btn"
+            data-testid="btn-back-to-shelves"
+            onClick={() => onSelectShelf(null)}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:bg-stone-50 dark:hover:bg-stone-800 text-xs font-bold text-stone-700 dark:text-stone-300 transition-colors cursor-pointer shadow-2xs group"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+            <span>All Shelves</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            <button
+              id="edit-shelf-btn"
+              onClick={() => onOpenEditShelf(activeShelf)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-800 text-xs font-semibold text-stone-700 dark:text-stone-300 transition-colors cursor-pointer"
+            >
+              <Edit2 className="w-3.5 h-3.5 text-stone-500" />
+              <span>Edit Shelf</span>
+            </button>
+            <button
+              id="create-subject-in-shelf-btn"
+              data-testid="btn-create-subject-in-shelf"
+              onClick={() => onOpenNewSubject(activeShelf.id)}
+              className="flex items-center gap-2 px-4 py-1.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>New Subject</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Shelf Banner Card */}
+        <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 border border-stone-200/80 dark:border-stone-800 shadow-xs relative overflow-hidden">
+          <div
+            className="absolute top-0 left-0 w-2 h-full"
+            style={{ backgroundColor: activeShelf.color || 'var(--theme-accent)' }}
+          />
+
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-start gap-4">
+              <div
+                className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold shadow-xs shrink-0 text-lg"
+                style={{ backgroundColor: activeShelf.color || 'var(--theme-accent)' }}
+              >
+                <Folder className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-2xl font-bold text-stone-900 dark:text-stone-100 tracking-tight">
+                    {activeShelf.name}
+                  </h1>
+                  <span className="px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold">
+                    Shelf
+                  </span>
+                </div>
+                <p className="text-sm text-stone-500 dark:text-stone-400 mt-1 max-w-2xl leading-relaxed">
+                  {activeShelf.description || 'Collection of subjects, flashcard decks, and practice tests.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Quick Metrics */}
+            <div className="flex items-center gap-3 self-start md:self-center">
+              <div className="px-3.5 py-2 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200/60 dark:border-stone-700/60 text-center min-w-[75px]">
+                <div className="text-base font-extrabold text-stone-900 dark:text-stone-100">
+                  {stats.subjectCount}
+                </div>
+                <div className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
+                  Subjects
+                </div>
+              </div>
+
+              <div className="px-3.5 py-2 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200/60 dark:border-stone-700/60 text-center min-w-[75px]">
+                <div className="text-base font-extrabold text-stone-900 dark:text-stone-100">
+                  {stats.cardCount}
+                </div>
+                <div className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
+                  Cards
+                </div>
+              </div>
+
+              <div className="px-3.5 py-2 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800 text-center min-w-[75px]">
+                <div className="text-base font-extrabold text-amber-800 dark:text-amber-400">
+                  {stats.dueCount}
+                </div>
+                <div className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-500 tracking-wider">
+                  Due FSRS
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Due Cards Active Recall Alert Banner if cards need review in this shelf */}
+        {activeShelfTotalDue > 0 && (
+          <div
+            id="due-cards-alert-banner"
+            className="bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--theme-accent)_40%,transparent)] rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs"
+          >
+            <div className="flex items-center gap-3.5 text-left w-full sm:w-auto">
+              <div className="w-10 h-10 rounded-xl bg-[var(--theme-accent)] flex items-center justify-center text-white shrink-0 shadow-xs">
+                <Clock className="w-5 h-5 animate-spin-slow" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
+                  <span>{activeShelfTotalDue} Cards Due in {activeShelf.name}</span>
+                  <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200">
+                    FSRS Review
+                  </span>
+                </h3>
+                <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5">
+                  Maintain your memory retention curve with active recall practice.
+                </p>
+              </div>
+            </div>
+
+            <button
+              id="quick-start-shelf-review-btn"
+              data-testid="btn-quick-shelf-review"
+              onClick={() => {
+                const firstDueSubject = filteredSubjectsInActiveShelf.find((s) => s.dueCount > 0);
+                if (firstDueSubject) onStartReview(firstDueSubject);
+              }}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-sm shadow-stone-500/30 transition-all cursor-pointer hover:scale-[1.02]"
+            >
+              <Play className="w-4 h-4 fill-white" />
+              <span>Start Review Session</span>
+            </button>
+          </div>
+        )}
+
+        {/* Subjects Search & Tag Filter Toolbar */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="relative flex-1 max-w-md">
+            <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              id="search-subjects-in-shelf-input"
+              data-testid="search-subjects-input"
+              type="text"
+              placeholder={`Search ${stats.subjectCount} subjects in this shelf...`}
+              value={subjectSearchQuery}
+              onChange={(e) => setSubjectSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)] focus:border-transparent transition-all"
+            />
+            {subjectSearchQuery && (
+              <button
+                onClick={() => setSubjectSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Tag Filters */}
+        {activeShelfTags.length > 0 && (
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mr-1 flex items-center gap-1">
+              <Tag className="w-3 h-3" />
+              Tags:
+            </span>
+            <button
+              onClick={() => setSelectedTag(null)}
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                selectedTag === null
+                  ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900'
+                  : 'bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-600 dark:text-stone-300'
+              }`}
+            >
+              All
+            </button>
+            {activeShelfTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                  selectedTag === tag
+                    ? 'bg-[var(--theme-accent)] text-white'
+                    : 'bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-600 dark:text-stone-300'
+                }`}
+              >
+                #{tag}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Subjects Grid (1:n) */}
+        {filteredSubjectsInActiveShelf.length === 0 ? (
+          <div
+            id="empty-shelf-subjects-state"
+            className="bg-white dark:bg-stone-900 rounded-3xl border border-dashed border-stone-300 dark:border-stone-800 p-12 text-center flex flex-col items-center justify-center space-y-4"
+          >
+            <div className="w-14 h-14 rounded-2xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-400">
+              <BookOpen className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-stone-800 dark:text-stone-200">
+                No subjects in this shelf yet
+              </h3>
+              <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mt-1">
+                Create a subject deck to start adding flashcards, test suites, and adaptive quizzes.
+              </p>
+            </div>
+            <button
+              onClick={() => onOpenNewSubject(activeShelf.id)}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold transition-colors cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create First Subject</span>
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filteredSubjectsInActiveShelf.map(renderSubjectCard)}
+          </div>
+        )}
+      </div>
+      ) : (
+        <div id="library-all-shelves-view" className="space-y-6 animate-fade-in">
+          {renderStudyGoalTracker()}
+          {/* Header & Main Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-stone-900 dark:text-stone-100 tracking-tight flex items-center gap-2.5">
-            <Folder className="w-6 h-6 text-[#558B2F] dark:text-[#8BC34A]" />
+            <Folder className="w-6 h-6 text-[var(--theme-secondary)] dark:text-[var(--theme-accent)]" />
             <span>My Library Shelves</span>
           </h1>
           <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
@@ -713,7 +739,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
             id="create-new-shelf-btn"
             data-testid="btn-create-shelf"
             onClick={onOpenNewShelf}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer hover:scale-[1.02]"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer hover:scale-[1.02]"
           >
             <Plus className="w-4 h-4" />
             <span>New Shelf</span>
@@ -721,14 +747,28 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
         </div>
       </div>
 
+
+      {/* Recent Activity */}
+      {!globalSubjectSearchQuery.trim() && !shelfSearchQuery.trim() && recentSubjects.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-sm font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            Recent Activity
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {recentSubjects.map(renderSubjectCard)}
+          </div>
+        </div>
+      )}
+
       {/* Global Due Reminder */}
       {allShelvesTotalDue > 0 && (
         <div
           id="global-due-cards-banner"
-          className="bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-[#8BC34A]/15 border border-[#8BC34A]/40 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs"
+          className="bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--theme-accent)_40%,transparent)] rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs"
         >
           <div className="flex items-center gap-3.5 text-left w-full sm:w-auto">
-            <div className="w-10 h-10 rounded-xl bg-[#8BC34A] flex items-center justify-center text-white shrink-0 shadow-xs">
+            <div className="w-10 h-10 rounded-xl bg-[var(--theme-accent)] flex items-center justify-center text-white shrink-0 shadow-xs">
               <Zap className="w-5 h-5" />
             </div>
             <div>
@@ -746,18 +786,18 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
         </div>
       )}
 
-      {/* Search Shelves Toolbar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div className="relative flex-1 max-w-md">
+      {/* Search Toolbars */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+        <div className="relative flex-1">
           <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             id="search-shelves-input"
             data-testid="search-shelves-input"
             type="text"
-            placeholder="Search shelves by name or description..."
+            placeholder="Search shelves..."
             value={shelfSearchQuery}
             onChange={(e) => setShelfSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#8BC34A] focus:border-transparent transition-all"
+            className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)] focus:border-transparent transition-all"
           />
           {shelfSearchQuery && (
             <button
@@ -768,10 +808,49 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
             </button>
           )}
         </div>
+        
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search all subjects by title or tag..."
+            value={globalSubjectSearchQuery}
+            onChange={(e) => setGlobalSubjectSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)] focus:border-transparent transition-all"
+          />
+          {globalSubjectSearchQuery && (
+            <button
+              onClick={() => setGlobalSubjectSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs"
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Shelves Grid (Level 1) */}
-      {filteredShelves.length === 0 ? (
+      {/* Shelves Grid (Level 1) or Global Subjects */}
+      {globalSubjectSearchQuery.trim() ? (
+        globalFilteredSubjects.length === 0 ? (
+          <div className="bg-white dark:bg-stone-900 rounded-3xl border border-dashed border-stone-300 dark:border-stone-800 p-12 text-center flex flex-col items-center justify-center space-y-4">
+            <div className="w-14 h-14 rounded-2xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center text-stone-400">
+              <Search className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-stone-800 dark:text-stone-200">
+                No subjects found
+              </h3>
+              <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mt-1">
+                Try adjusting your search query.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {globalFilteredSubjects.map(renderSubjectCard)}
+          </div>
+        )
+      ) : filteredShelves.length === 0 ? (
         <div
           id="empty-shelves-state"
           className="bg-white dark:bg-stone-900 rounded-3xl border border-dashed border-stone-300 dark:border-stone-800 p-12 text-center flex flex-col items-center justify-center space-y-4"
@@ -789,7 +868,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
           </div>
           <button
             onClick={onOpenNewShelf}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Create New Shelf</span>
@@ -804,13 +883,13 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
                 key={shelf.id}
                 id={`shelf-card-${shelf.id}`}
                 data-testid={`shelf-card-${shelf.id}`}
-                className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200/80 dark:border-stone-800 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between overflow-hidden group hover:border-[#8BC34A]/50 relative cursor-pointer"
+                className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200/80 dark:border-stone-800 shadow-xs hover:shadow-lg transition-all duration-200 flex flex-col justify-between overflow-hidden group hover:border-[color-mix(in_srgb,var(--theme-accent)_50%,transparent)] relative cursor-pointer"
                 onClick={() => onSelectShelf(shelf.id)}
               >
                 {/* Top Shelf Color Bar */}
                 <div
                   className="h-2 w-full"
-                  style={{ backgroundColor: shelf.color || '#8BC34A' }}
+                  style={{ backgroundColor: shelf.color || 'var(--theme-accent)' }}
                 />
 
                 <div className="p-6 pb-4">
@@ -818,12 +897,12 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
                     <div className="flex items-center gap-3.5 min-w-0 flex-1">
                       <div
                         className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-2xs font-bold text-lg shrink-0 group-hover:scale-105 transition-transform"
-                        style={{ backgroundColor: shelf.color || '#8BC34A' }}
+                        style={{ backgroundColor: shelf.color || 'var(--theme-accent)' }}
                       >
                         <Folder className="w-6 h-6" />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 group-hover:text-[#558B2F] dark:group-hover:text-[#8BC34A] transition-colors line-clamp-1">
+                        <h3 className="text-lg font-bold text-stone-900 dark:text-stone-100 group-hover:text-[var(--theme-secondary)] dark:group-hover:text-[var(--theme-accent)] transition-colors line-clamp-1">
                           {shelf.name}
                         </h3>
                         <div className="flex items-center gap-2 mt-0.5">
@@ -870,7 +949,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
                             }}
                             className="w-full flex items-center gap-2 px-3 py-2 hover:bg-stone-50 dark:hover:bg-stone-700 text-left cursor-pointer"
                           >
-                            <Plus className="w-3.5 h-3.5 text-[#558B2F]" />
+                            <Plus className="w-3.5 h-3.5 text-[var(--theme-secondary)]" />
                             <span>Add Subject</span>
                           </button>
                           <button
@@ -910,7 +989,7 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
 
                 {/* Bottom Action Footer */}
                 <div className="px-6 py-3.5 bg-stone-50/80 dark:bg-stone-800/50 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#558B2F] dark:text-[#8BC34A] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  <span className="text-xs font-bold text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                     <span>Explore {stats.subjectCount} {stats.subjectCount === 1 ? 'Subject' : 'Subjects'}</span>
                     <ChevronRight className="w-4 h-4" />
                   </span>
@@ -930,6 +1009,8 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
             );
           })}
         </div>
+      )}
+      </div>
       )}
 
       {/* Direct Import Cards Modal */}
@@ -957,6 +1038,57 @@ export const LibraryShelvesView: React.FC<LibraryShelvesViewProps> = ({
           }}
         />
       )}
-    </div>
+
+      {/* Floating Drag & Drop Overlay */}
+      {draggedSubjectId && (
+        <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/90 dark:bg-stone-900/90 backdrop-blur-md border-t border-stone-200 dark:border-stone-800 z-50 flex flex-col items-center animate-in slide-in-from-bottom-8 duration-300 shadow-2xl">
+          <h3 className="text-sm font-bold text-stone-800 dark:text-stone-200 mb-4 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-[var(--theme-accent)]" />
+            Drop subject to move to a shelf
+          </h3>
+          <div className="flex gap-4 overflow-x-auto max-w-4xl w-full pb-2 px-4 justify-center items-center">
+            {shelves.filter((s: Shelf) => s.id !== activeShelf?.id).map((shelf: Shelf) => (
+              <div
+                key={shelf.id}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setDragOverShelfId(shelf.id);
+                }}
+                onDragLeave={() => {
+                  if (dragOverShelfId === shelf.id) setDragOverShelfId(null);
+                }}
+                onDrop={async (e) => {
+                  e.preventDefault();
+                  const subjectId = e.dataTransfer.getData('subjectId');
+                  setDraggedSubjectId(null);
+                  setDragOverShelfId(null);
+                  if (subjectId) {
+                    try {
+                      await ApiService.updateSubject(subjectId, { shelfId: shelf.id });
+                      if (onRefreshData) onRefreshData();
+                    } catch (err) {
+                      console.error(err);
+                    }
+                  }
+                }}
+                className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all min-w-[120px] max-w-[140px] ${
+                  dragOverShelfId === shelf.id 
+                    ? 'border-[var(--theme-accent)] bg-[var(--theme-accent)]/10 scale-110 shadow-lg' 
+                    : 'border-dashed border-stone-300 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 opacity-80 hover:opacity-100'
+                }`}
+              >
+                <div className="w-10 h-10 rounded-xl mb-2 flex items-center justify-center text-white shadow-sm" style={{ backgroundColor: shelf.color || 'var(--theme-accent)' }}>
+                  <Folder className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-bold text-center line-clamp-1 w-full text-stone-700 dark:text-stone-300">{shelf.name}</span>
+              </div>
+            ))}
+            {shelves.filter((s: Shelf) => s.id !== activeShelf?.id).length === 0 && (
+              <span className="text-sm font-semibold text-stone-500">No other shelves available.</span>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };

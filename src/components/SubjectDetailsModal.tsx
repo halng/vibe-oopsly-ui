@@ -199,7 +199,7 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
           <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
             <div
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center text-white font-bold shadow-xs shrink-0"
-              style={{ backgroundColor: subject.color || '#8BC34A' }}
+              style={{ backgroundColor: subject.color || 'var(--theme-accent)' }}
             >
               <Layers className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
@@ -218,7 +218,7 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
                 </p>
                 {cards.length > 0 && (
                   <div className="shrink-0">
-                    <D3ProgressBar mastered={masteredCards} total={cards.length} color={subject.color || '#8BC34A'} />
+                    <D3ProgressBar mastered={masteredCards} total={cards.length} color={subject.color || 'var(--theme-accent)'} />
                   </div>
                 )}
               </div>
@@ -240,7 +240,7 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
               onClose();
               onStartReview(subject);
             }}
-            className="flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs cursor-pointer"
+            className="flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs cursor-pointer"
           >
             <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white" />
             <span>Active Recall</span>
@@ -308,7 +308,7 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
               placeholder="Search cards..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#8BC34A]"
+              className="w-full pl-8 pr-3 py-1.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
             />
           </div>
 
@@ -384,7 +384,7 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
                   placeholder="e.g. What is the time complexity of QuickSort?"
                   value={newFront}
                   onChange={(e) => setNewFront(e.target.value)}
-                  className="w-full p-2.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+                  className="w-full p-2.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
                 />
               </div>
               <div>
@@ -397,7 +397,7 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
                   placeholder="e.g. O(n log n) average, O(n^2) worst case with bad pivot."
                   value={newBack}
                   onChange={(e) => setNewBack(e.target.value)}
-                  className="w-full p-2.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+                  className="w-full p-2.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
                 />
               </div>
             </div>
@@ -411,7 +411,7 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
                   placeholder="e.g. Think about recursion tree"
                   value={newHint}
                   onChange={(e) => setNewHint(e.target.value)}
-                  className="w-full p-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+                  className="w-full p-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
                 />
               </div>
               <div>
@@ -423,14 +423,14 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
                   placeholder="e.g. algorithms, sorting"
                   value={newTags}
                   onChange={(e) => setNewTags(e.target.value)}
-                  className="w-full p-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+                  className="w-full p-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-800 dark:text-stone-100 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
                 />
               </div>
             </div>
             <div className="flex justify-end pt-1">
               <button
                 type="submit"
-                className="px-4 py-2 bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold rounded-xl cursor-pointer"
+                className="px-4 py-2 bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold rounded-xl cursor-pointer"
               >
                 Save Flashcard
               </button>
@@ -448,6 +448,52 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
             </div>
           ) : (
             filteredCards.map((card, idx) => (
+              editingCard?.id === card.id ? (
+                <div
+                  key={card.id}
+                  className="p-3.5 sm:p-4 bg-white dark:bg-stone-800 border border-[var(--theme-accent)] rounded-2xl transition-all shadow-sm space-y-3"
+                >
+                  <form onSubmit={handleUpdateCard} className="space-y-3 text-xs">
+                    <input
+                      type="text"
+                      value={editingCard.front}
+                      onChange={(e) => setEditingCard({ ...editingCard, front: e.target.value })}
+                      className="w-full font-extrabold text-stone-900 dark:text-stone-100 bg-stone-50 dark:bg-stone-900 p-2.5 rounded-xl border border-stone-200 dark:border-stone-700 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)] focus:border-transparent"
+                      placeholder="Front of card (Question)"
+                      autoFocus
+                    />
+                    <textarea
+                      value={editingCard.back}
+                      onChange={(e) => setEditingCard({ ...editingCard, back: e.target.value })}
+                      className="w-full text-stone-700 dark:text-stone-300 bg-stone-50 dark:bg-stone-900 p-2.5 rounded-xl border border-stone-200 dark:border-stone-700 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)] focus:border-transparent min-h-[60px]"
+                      placeholder="Back of card (Answer)"
+                    />
+                    <input
+                      type="text"
+                      value={editingCard.hint || ''}
+                      onChange={(e) => setEditingCard({ ...editingCard, hint: e.target.value })}
+                      className="w-full text-stone-700 dark:text-stone-300 bg-stone-50 dark:bg-stone-900 p-2.5 rounded-xl border border-stone-200 dark:border-stone-700 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)] focus:border-transparent"
+                      placeholder="Hint (optional)"
+                    />
+                    <div className="flex items-center justify-end gap-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setEditingCard(null)}
+                        className="px-3 py-1.5 rounded-lg text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-700 font-bold transition-colors cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={!editingCard.front.trim() || !editingCard.back.trim()}
+                        className="px-4 py-1.5 rounded-lg bg-[var(--theme-accent)] text-white font-bold hover:bg-[var(--theme-secondary)] transition-colors disabled:opacity-50 cursor-pointer"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              ) : (
               <div
                 key={card.id}
                 className="p-3.5 sm:p-4 bg-stone-50/70 dark:bg-stone-800/50 hover:bg-stone-100/70 dark:hover:bg-stone-800 border border-stone-200/70 dark:border-stone-750 rounded-2xl transition-all flex items-start justify-between gap-3 sm:gap-4 text-xs"
@@ -506,6 +552,7 @@ export const SubjectDetailsModal: React.FC<SubjectDetailsModalProps> = ({
                   </button>
                 </div>
               </div>
+              )
             ))
           )}
         </div>

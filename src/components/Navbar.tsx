@@ -82,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       <header
         id="main-header"
-        className="sticky top-0 z-40 bg-[var(--theme-card)]/95 backdrop-blur border-b border-[var(--theme-border)] shadow-xs transition-colors"
+        className="sticky top-0 z-40 bg-[color-mix(in_srgb,var(--theme-card)_95%,transparent)] backdrop-blur border-b border-[var(--theme-border)] shadow-xs transition-colors"
         style={{
           backgroundColor: 'var(--theme-card)',
           borderColor: 'var(--theme-border)',
@@ -329,7 +329,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Upgrade to Pro */}
               <button
                 onClick={() => navigate('/subscribe')}
-                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#8BC34A]/10 text-[#558B2F] dark:text-[#8BC34A] hover:bg-[#8BC34A]/20 transition-colors text-xs font-bold cursor-pointer border border-[#8BC34A]/20"
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] hover:bg-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)] transition-colors text-xs font-bold cursor-pointer border border-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)]"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Pro</span>

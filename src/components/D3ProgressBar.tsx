@@ -15,7 +15,7 @@ export const D3ProgressBar: React.FC<D3ProgressBarProps> = ({
   total,
   width = 120,
   height = 8,
-  color = '#8BC34A', // Theme accent
+  color = 'var(--theme-accent)', // Theme accent
   backgroundColor = 'rgba(120, 113, 108, 0.2)' // stone-500 with opacity
 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);

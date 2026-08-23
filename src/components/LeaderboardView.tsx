@@ -177,7 +177,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
         {/* Banner Gate Notice */}
         <div className="bg-gradient-to-r from-emerald-950 via-stone-900 to-stone-950 text-white rounded-3xl p-7 sm:p-9 shadow-sm border border-stone-800 relative overflow-hidden">
           <div className="max-w-2xl space-y-3 relative z-10">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8BC34A]/20 text-[#8BC34A] text-xs font-extrabold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)] text-[var(--theme-accent)] text-xs font-extrabold uppercase tracking-wider">
               <Users className="w-3.5 h-3.5" />
               <span>Community-Driven Leaderboards</span>
             </div>
@@ -193,7 +193,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
                 id="btn-create-first-community"
                 data-testid="btn-create-first-community"
                 onClick={() => setIsCreateModalOpen(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs transition-all cursor-pointer hover:scale-[1.02]"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs transition-all cursor-pointer hover:scale-[1.02]"
               >
                 <Plus className="w-4 h-4" />
                 <span>Create Your Own Community</span>
@@ -221,7 +221,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
                 placeholder="Search communities..."
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#8BC34A]"
+                className="w-full pl-9 pr-3 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
               />
             </div>
           </div>
@@ -245,12 +245,12 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
                       <div className="flex items-center gap-3">
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shrink-0 shadow-2xs text-sm"
-                          style={{ backgroundColor: comm.color || '#8BC34A' }}
+                          style={{ backgroundColor: comm.color || 'var(--theme-accent)' }}
                         >
                           <Users className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100 group-hover:text-[#558B2F] dark:group-hover:text-[#8BC34A] transition-colors">
+                          <h3 className="text-sm font-bold text-stone-900 dark:text-stone-100 group-hover:text-[var(--theme-secondary)] dark:group-hover:text-[var(--theme-accent)] transition-colors">
                             {comm.name}
                           </h3>
                           <div className="flex items-center gap-2 text-[11px] text-stone-500 mt-0.5">
@@ -306,7 +306,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
                         id={`btn-join-comm-${comm.id}`}
                         data-testid={`btn-join-${comm.id}`}
                         onClick={() => handleJoinCommunity(comm)}
-                        className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer"
+                        className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer"
                       >
                         <span>{comm.isPrivate ? 'Request to Join' : 'Join Community'}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -355,7 +355,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
             >
               <span
                 className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: comm.color || '#8BC34A' }}
+                style={{ backgroundColor: comm.color || 'var(--theme-accent)' }}
               />
               <span>{comm.name}</span>
             </button>
@@ -380,7 +380,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
                 id="btn-open-invite-user"
                 data-testid="btn-invite-user"
                 onClick={() => setIsInviteModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#8BC34A]/15 text-[#558B2F] dark:text-[#8BC34A] hover:bg-[#8BC34A]/25 text-xs font-bold transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] hover:bg-[color-mix(in_srgb,var(--theme-accent)_25%,transparent)] text-xs font-bold transition-colors cursor-pointer"
               >
                 <UserPlus className="w-3.5 h-3.5" />
                 <span>Add Member</span>
@@ -407,9 +407,9 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
             <div className="flex items-center gap-2 flex-wrap">
               <span
                 className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: activeCommunity.color || '#8BC34A' }}
+                style={{ backgroundColor: activeCommunity.color || 'var(--theme-accent)' }}
               />
-              <span className="text-xs font-extrabold uppercase tracking-wider text-[#8BC34A]">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-[var(--theme-accent)]">
                 {activeCommunity.name} Leaderboard
               </span>
               <span className="text-stone-500">•</span>
@@ -437,7 +437,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
             </div>
 
             <div className="px-4 py-2.5 rounded-2xl bg-white/10 backdrop-blur-xs text-center min-w-[80px]">
-              <div className="text-lg font-extrabold text-[#8BC34A]">
+              <div className="text-lg font-extrabold text-[var(--theme-accent)]">
                 {communityLeaderboard.members.reduce((acc, m) => acc + (m.xp || 0), 0).toLocaleString()}
               </div>
               <div className="text-[10px] uppercase font-bold text-stone-400">Total XP</div>
@@ -606,7 +606,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
                   data-testid={`member-row-${m.id}`}
                   className={`px-6 py-4 flex items-center justify-between transition-colors ${
                     isCurrentUser
-                      ? 'bg-[#8BC34A]/10 dark:bg-[#8BC34A]/15 font-bold'
+                      ? 'bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] dark:bg-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] font-bold'
                       : 'hover:bg-stone-50 dark:hover:bg-stone-800/50'
                   }`}
                 >
@@ -647,7 +647,7 @@ export const LeaderboardView: React.FC<LeaderboardViewProps> = ({ currentUser })
                             {m.displayName}
                           </span>
                           {isCurrentUser && (
-                            <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-[#8BC34A] text-white">
+                            <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-[var(--theme-accent)] text-white">
                               You
                             </span>
                           )}

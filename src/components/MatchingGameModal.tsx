@@ -187,7 +187,7 @@ export const MatchingGameModal: React.FC<MatchingGameModalProps> = ({
               </button>
               <button
                 onClick={onClose}
-                className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-sm shadow-[#8BC34A]/30 cursor-pointer"
+                className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-sm shadow-stone-500/30 cursor-pointer"
               >
                 <span>Return to Library</span>
               </button>
@@ -213,7 +213,7 @@ export const MatchingGameModal: React.FC<MatchingGameModalProps> = ({
                     'bg-rose-50 dark:bg-rose-950/40 border-rose-400 dark:border-rose-600 text-rose-900 dark:text-rose-200 animate-shake';
                 } else if (isSelected) {
                   tileStyle =
-                    'bg-[#8BC34A]/20 border-[#8BC34A] text-[#33691E] dark:text-[#8BC34A] font-bold ring-2 ring-[#8BC34A]/40 scale-102';
+                    'bg-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)] border-[var(--theme-accent)] text-[#33691E] dark:text-[var(--theme-accent)] font-bold ring-2 ring-[color-mix(in_srgb,var(--theme-accent)_40%,transparent)] scale-102';
                 }
 
                 return (

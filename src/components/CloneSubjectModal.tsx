@@ -54,7 +54,7 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
     if (subject) {
       setCustomTitle(subject.title || '');
       setCustomDescription(subject.description || '');
-      setSelectedColor(subject.color || '#8BC34A');
+      setSelectedColor(subject.color || 'var(--theme-accent)');
       setErrorMsg(null);
       setShowCardsPreview(false);
       setIsCreatingShelf(false);
@@ -162,7 +162,7 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-stone-100 dark:border-stone-800 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#8BC34A]/15 text-[#8BC34A] flex items-center justify-center shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] text-[var(--theme-accent)] flex items-center justify-center shadow-xs">
               <Download className="w-5 h-5" />
             </div>
             <div>
@@ -198,12 +198,12 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
               <div className="flex items-center gap-3">
                 <div
                   className="w-11 h-11 rounded-2xl flex items-center justify-center text-white font-bold shadow-xs shrink-0"
-                  style={{ backgroundColor: selectedColor || subject.color || '#8BC34A' }}
+                  style={{ backgroundColor: selectedColor || subject.color || 'var(--theme-accent)' }}
                 >
                   <Layers className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-extrabold text-[#8BC34A] tracking-wider block">
+                  <span className="text-[10px] uppercase font-extrabold text-[var(--theme-accent)] tracking-wider block">
                     Source Deck
                   </span>
                   <h3 className="text-sm sm:text-base font-bold text-stone-900 dark:text-stone-100">
@@ -213,7 +213,7 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
               </div>
 
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs font-bold text-stone-700 dark:text-stone-300 shrink-0">
-                <BookOpen className="w-3.5 h-3.5 text-[#8BC34A]" />
+                <BookOpen className="w-3.5 h-3.5 text-[var(--theme-accent)]" />
                 <span>{subject.cardCount || sampleCards.length} Cards</span>
               </div>
             </div>
@@ -241,7 +241,7 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-xs font-bold text-stone-800 dark:text-stone-200 flex items-center gap-1.5">
-                <Folder className="w-4 h-4 text-[#8BC34A]" />
+                <Folder className="w-4 h-4 text-[var(--theme-accent)]" />
                 <span>Destination Shelf</span>
               </label>
 
@@ -249,7 +249,7 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsCreatingShelf(true)}
-                  className="text-xs font-bold text-[#8BC34A] hover:underline flex items-center gap-1 cursor-pointer"
+                  className="text-xs font-bold text-[var(--theme-accent)] hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>New Shelf</span>
@@ -280,12 +280,12 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
                     placeholder="Shelf name (e.g. University, Tech Prep)"
                     value={newShelfName}
                     onChange={(e) => setNewShelfName(e.target.value)}
-                    className="flex-1 px-3 py-1.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+                    className="flex-1 px-3 py-1.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
                   />
                   <button
                     type="submit"
                     disabled={isSubmittingNewShelf || !newShelfName.trim()}
-                    className="px-3 py-1.5 bg-[#8BC34A] hover:bg-[#7CB342] text-white rounded-xl text-xs font-bold shadow-xs disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1.5 bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white rounded-xl text-xs font-bold shadow-xs disabled:opacity-50 cursor-pointer"
                   >
                     {isSubmittingNewShelf ? 'Creating...' : 'Save & Select'}
                   </button>
@@ -314,14 +314,14 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
                       onClick={() => setSelectedShelfId(shelf.id)}
                       className={`p-3 rounded-2xl border text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
                         isSelected
-                          ? 'border-[#8BC34A] bg-[#8BC34A]/10 dark:bg-[#8BC34A]/15 ring-2 ring-[#8BC34A]/30'
+                          ? 'border-[var(--theme-accent)] bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] dark:bg-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] ring-2 ring-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)]'
                           : 'border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-stone-800/40 hover:bg-stone-100 dark:hover:bg-stone-800'
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         <div
                           className="w-8 h-8 rounded-xl flex items-center justify-center text-white font-bold shrink-0 text-xs shadow-2xs"
-                          style={{ backgroundColor: shelf.color || '#8BC34A' }}
+                          style={{ backgroundColor: shelf.color || 'var(--theme-accent)' }}
                         >
                           <Folder className="w-4 h-4" />
                         </div>
@@ -338,7 +338,7 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border transition-all ${
                           isSelected
-                            ? 'bg-[#8BC34A] border-[#8BC34A] text-white'
+                            ? 'bg-[var(--theme-accent)] border-[var(--theme-accent)] text-white'
                             : 'border-stone-300 dark:border-stone-600'
                         }`}
                       >
@@ -366,7 +366,7 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
                 value={customTitle}
                 onChange={(e) => setCustomTitle(e.target.value)}
                 placeholder="Subject title in your shelf..."
-                className="w-full px-3 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+                className="w-full px-3 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
               />
             </div>
           </div>
@@ -398,7 +398,7 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
                       className="p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/70 border border-stone-200/60 dark:border-stone-700/60 text-xs space-y-1"
                     >
                       <div className="font-bold text-stone-900 dark:text-stone-100">
-                        <span className="text-[#8BC34A] mr-1.5 font-extrabold">Q:</span>
+                        <span className="text-[var(--theme-accent)] mr-1.5 font-extrabold">Q:</span>
                         {c.front}
                       </div>
                       <div className="text-stone-600 dark:text-stone-300 pl-4 border-l-2 border-stone-200 dark:border-stone-700">
@@ -427,7 +427,7 @@ export const CloneSubjectModal: React.FC<CloneSubjectModalProps> = ({
             type="button"
             disabled={isCloning || !selectedShelfId || !customTitle.trim()}
             onClick={handleConfirmClone}
-            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-md shadow-[#8BC34A]/20 transition-all disabled:opacity-50 cursor-pointer"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-md shadow-stone-500/20 transition-all disabled:opacity-50 cursor-pointer"
           >
             {isCloning ? (
               <>

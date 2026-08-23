@@ -59,8 +59,8 @@ export const ReviewCompleteScreen: React.FC<ReviewCompleteScreenProps> = ({
     >
       <div className="bg-white dark:bg-stone-900 rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl border border-stone-100 dark:border-stone-800 text-center space-y-5 sm:space-y-6 animate-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
         {/* Badge / Trophy Icon */}
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-3xl bg-[#8BC34A]/20 text-[#558B2F] dark:text-[#8BC34A] flex items-center justify-center mx-auto shadow-inner">
-          <Trophy className="w-7 h-7 sm:w-8 sm:h-8 text-[#558B2F] dark:text-[#8BC34A]" />
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-3xl bg-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)] text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] flex items-center justify-center mx-auto shadow-inner">
+          <Trophy className="w-7 h-7 sm:w-8 sm:h-8 text-[var(--theme-secondary)] dark:text-[var(--theme-accent)]" />
         </div>
 
         <div>
@@ -157,7 +157,7 @@ export const ReviewCompleteScreen: React.FC<ReviewCompleteScreenProps> = ({
             id="return-to-shelf-btn"
             data-testid="btn-return-shelf"
             onClick={onReturnToShelf}
-            className="w-full flex items-center justify-center gap-2 py-2.5 sm:py-3 px-4 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-md shadow-[#8BC34A]/30 transition-all cursor-pointer hover:scale-[1.02]"
+            className="w-full flex items-center justify-center gap-2 py-2.5 sm:py-3 px-4 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-md shadow-stone-500/30 transition-all cursor-pointer hover:scale-[1.02]"
           >
             <span>Return to Library</span>
             <ArrowRight className="w-4 h-4" />

@@ -38,7 +38,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
 }) => {
   const [title, setTitle] = useState(subject?.title || '');
   const [description, setDescription] = useState(subject?.description || '');
-  const [color, setColor] = useState(subject?.color || '#8BC34A');
+  const [color, setColor] = useState(subject?.color || 'var(--theme-accent)');
   const [tags, setTags] = useState(subject?.tags ? subject.tags.join(', ') : '');
   const [selectedShelfId, setSelectedShelfId] = useState(subject?.shelfId || shelfId);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -106,7 +106,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
               placeholder="e.g. Distributed Systems & Consensus, Japanese N3 Kanji"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
             />
           </div>
 
@@ -115,7 +115,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
             <select
               value={selectedShelfId}
               onChange={(e) => setSelectedShelfId(e.target.value)}
-              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-bold text-stone-900 focus:ring-2 focus:ring-[#8BC34A]"
+              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl font-bold text-stone-900 focus:ring-2 focus:ring-[var(--theme-accent)]"
             >
               {shelves.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -132,7 +132,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
               placeholder="Brief summary of concepts covered in this deck..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
             />
           </div>
 
@@ -143,7 +143,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
               placeholder="e.g. algorithms, cs, backend"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
             />
           </div>
 
@@ -175,7 +175,7 @@ export const SubjectModal: React.FC<SubjectModalProps> = ({
             <button
               type="submit"
               disabled={isSubmitting || !title.trim()}
-              className="flex items-center gap-1.5 px-5 py-2 bg-[#8BC34A] hover:bg-[#7CB342] text-white font-bold text-xs rounded-xl shadow-xs cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 px-5 py-2 bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white font-bold text-xs rounded-xl shadow-xs cursor-pointer disabled:opacity-50"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{isSubmitting ? 'Saving...' : 'Save Deck'}</span>

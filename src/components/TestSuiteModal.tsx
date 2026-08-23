@@ -241,7 +241,7 @@ export const TestSuiteModal: React.FC<TestSuiteModalProps> = ({
             <div className="flex justify-end pt-2">
               <button
                 onClick={onClose}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
               >
                 Done
               </button>
@@ -272,14 +272,14 @@ export const TestSuiteModal: React.FC<TestSuiteModalProps> = ({
                     onClick={() => handleSelectAnswer(currentQ.id, optIdx)}
                     className={`w-full text-left p-3.5 sm:p-4 rounded-2xl border transition-all text-xs sm:text-sm flex items-center justify-between cursor-pointer ${
                       isSelected
-                        ? 'bg-[#8BC34A]/15 dark:bg-[#8BC34A]/25 border-[#8BC34A] text-[#33691E] dark:text-[#8BC34A] font-bold shadow-2xs'
+                        ? 'bg-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] dark:bg-[color-mix(in_srgb,var(--theme-accent)_25%,transparent)] border-[var(--theme-accent)] text-[#33691E] dark:text-[var(--theme-accent)] font-bold shadow-2xs'
                         : 'bg-white dark:bg-stone-850 border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-800 text-stone-800 dark:text-stone-200'
                     }`}
                   >
                     <span>{option}</span>
                     <div
                       className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ml-3 ${
-                        isSelected ? 'border-[#8BC34A] bg-[#8BC34A]' : 'border-stone-300 dark:border-stone-600'
+                        isSelected ? 'border-[var(--theme-accent)] bg-[var(--theme-accent)]' : 'border-stone-300 dark:border-stone-600'
                       }`}
                     >
                       {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
@@ -309,7 +309,7 @@ export const TestSuiteModal: React.FC<TestSuiteModalProps> = ({
                         currentQuestionIndex === idx
                           ? 'bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900'
                           : userAnswers[q.id] !== undefined
-                          ? 'bg-[#8BC34A]/20 dark:bg-[#8BC34A]/30 text-[#558B2F] dark:text-[#8BC34A]'
+                          ? 'bg-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)] dark:bg-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)] text-[var(--theme-secondary)] dark:text-[var(--theme-accent)]'
                           : 'bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400'
                       }`}
                     >
@@ -330,7 +330,7 @@ export const TestSuiteModal: React.FC<TestSuiteModalProps> = ({
                 ) : (
                   <button
                     onClick={handleSubmit}
-                    className="w-full sm:w-auto px-5 py-2 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs cursor-pointer"
+                    className="w-full sm:w-auto px-5 py-2 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs cursor-pointer"
                   >
                     Submit Test
                   </button>

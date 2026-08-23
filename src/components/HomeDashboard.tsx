@@ -102,7 +102,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-stone-900 tracking-tight flex items-center gap-2.5">
-            <BookOpen className="w-6 h-6 text-[#558B2F]" />
+            <BookOpen className="w-6 h-6 text-[var(--theme-secondary)]" />
             <span>My Subjects</span>
           </h1>
           <p className="text-xs text-stone-500 mt-1">
@@ -138,7 +138,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
             id="create-subject-btn"
             data-testid="btn-create-subject"
             onClick={() => onOpenNewSubject(currentShelfForCreation)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer shrink-0 hover:scale-[1.02]"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer shrink-0 hover:scale-[1.02]"
           >
             <Plus className="w-4 h-4" />
             <span>Create Subject</span>
@@ -150,10 +150,10 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
       {totalDueInView > 0 && (
         <div
           id="due-cards-alert-banner"
-          className="bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-[#8BC34A]/15 border border-[#8BC34A]/40 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs"
+          className="bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] border border-[color-mix(in_srgb,var(--theme-accent)_40%,transparent)] rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs"
         >
           <div className="flex items-center gap-3.5 text-left w-full sm:w-auto">
-            <div className="w-10 h-10 rounded-xl bg-[#8BC34A] flex items-center justify-center text-white shrink-0 shadow-xs">
+            <div className="w-10 h-10 rounded-xl bg-[var(--theme-accent)] flex items-center justify-center text-white shrink-0 shadow-xs">
               <Clock className="w-5 h-5 animate-spin-slow" />
             </div>
             <div>
@@ -176,7 +176,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               const firstDueSubject = filteredSubjects.find((s) => s.dueCount > 0);
               if (firstDueSubject) onStartReview(firstDueSubject);
             }}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-sm shadow-[#8BC34A]/30 transition-all cursor-pointer hover:scale-[1.02]"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-sm shadow-stone-500/30 transition-all cursor-pointer hover:scale-[1.02]"
           >
             <Play className="w-4 h-4 fill-white" />
             <span>Start Review Session</span>
@@ -196,7 +196,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
             placeholder="Search subjects by title, description, or tags..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#8BC34A] focus:border-transparent transition-all"
+            className="w-full pl-9 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)] focus:border-transparent transition-all"
           />
           {searchQuery && (
             <button
@@ -232,7 +232,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                 selectedTag === tag
-                  ? 'bg-[#8BC34A] text-white'
+                  ? 'bg-[var(--theme-accent)] text-white'
                   : 'bg-stone-100 hover:bg-stone-200 text-stone-600'
               }`}
             >
@@ -261,7 +261,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
           </div>
           <button
             onClick={() => onOpenNewSubject(currentShelfForCreation)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Create Subject Deck</span>
@@ -285,14 +285,14 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     <div className="flex items-center gap-3">
                       <div
                         className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-2xs font-bold text-sm"
-                        style={{ backgroundColor: subject.color || '#8BC34A' }}
+                        style={{ backgroundColor: subject.color || 'var(--theme-accent)' }}
                       >
                         <Layers className="w-5 h-5" />
                       </div>
                       <div>
                         <h3
                           onClick={() => onViewSubjectDetails(subject)}
-                          className="text-base font-bold text-stone-900 group-hover:text-[#558B2F] transition-colors cursor-pointer line-clamp-1"
+                          className="text-base font-bold text-stone-900 group-hover:text-[var(--theme-secondary)] transition-colors cursor-pointer line-clamp-1"
                         >
                           {subject.title}
                         </h3>
@@ -392,7 +392,7 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
                     id={`review-btn-${subject.id}`}
                     data-testid={`btn-review-${subject.id}`}
                     onClick={() => onStartReview(subject)}
-                    className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer"
                   >
                     <Play className="w-3.5 h-3.5 fill-white" />
                     <span>{hasDue ? `Review Due (${subject.dueCount})` : 'Practice All Cards'}</span>

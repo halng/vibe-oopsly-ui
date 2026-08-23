@@ -930,7 +930,7 @@ export const StudyPomodoroView: React.FC<StudyPomodoroViewProps> = ({
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-stone-400 pt-4 border-t border-[var(--theme-border)]/50">
+                  <div className="flex items-center justify-between text-xs text-stone-400 pt-4 border-t border-[color-mix(in_srgb,var(--theme-border)_50%,transparent)]">
                     <span>
                       {isFlipped ? 'How well did you recall this?' : 'Click card to reveal answer'}
                     </span>

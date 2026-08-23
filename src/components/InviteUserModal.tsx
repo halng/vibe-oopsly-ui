@@ -53,7 +53,7 @@ export const InviteUserModal: React.FC<InviteUserModalProps> = ({
       >
         <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-stone-800">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-[#8BC34A]/15 text-[#558B2F] dark:text-[#8BC34A] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-2xl bg-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] flex items-center justify-center">
               <UserPlus className="w-5 h-5" />
             </div>
             <div>
@@ -94,7 +94,7 @@ export const InviteUserModal: React.FC<InviteUserModalProps> = ({
                 placeholder="e.g. alex@stanford.edu or Alex Rivera"
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-[#8BC34A]"
+                className="w-full pl-9 pr-4 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
               />
             </div>
             <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1">
@@ -115,7 +115,7 @@ export const InviteUserModal: React.FC<InviteUserModalProps> = ({
               data-testid="btn-confirm-invite"
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs cursor-pointer disabled:opacity-50"
             >
               <UserPlus className="w-4 h-4" />
               <span>{isSubmitting ? 'Adding...' : 'Add Member'}</span>

@@ -140,7 +140,7 @@ export const LearnModeModal: React.FC<LearnModeModalProps> = ({
               </button>
               <button
                 onClick={onClose}
-                className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-sm shadow-[#8BC34A]/30 cursor-pointer"
+                className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-sm shadow-stone-500/30 cursor-pointer"
               >
                 <span>Back to Library</span>
               </button>

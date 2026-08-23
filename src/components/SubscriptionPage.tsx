@@ -27,7 +27,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ onClose, cur
       {/* Header / Nav */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-[#8BC34A] text-white flex items-center justify-center shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-[var(--theme-accent)] text-white flex items-center justify-center shadow-xs">
             <Sparkles className="w-5 h-5" />
           </div>
           <span className="font-black text-[var(--theme-text)] tracking-tight text-xl">Oopsly Pro</span>
@@ -64,10 +64,10 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ onClose, cur
               <button
                 onClick={() => setBillingCycle('yearly')}
                 className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                  isYearly ? 'bg-[#8BC34A] text-white shadow-sm shadow-[#8BC34A]/20' : 'text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
+                  isYearly ? 'bg-[var(--theme-accent)] text-white shadow-sm shadow-stone-500/20' : 'text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
                 }`}
               >
-                Yearly <span className={isYearly ? 'text-white/80 text-xs' : 'text-[#8BC34A] text-xs'}>Save 20%</span>
+                Yearly <span className={isYearly ? 'text-white/80 text-xs' : 'text-[var(--theme-accent)] text-xs'}>Save 20%</span>
               </button>
             </div>
           </div>
@@ -88,7 +88,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ onClose, cur
             <ul className="space-y-4 mb-8 flex-1">
               {['Up to 3 decks', 'FSRS Algorithm', 'Basic stats', 'Standard garden plants', 'Web access'].map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-[#8BC34A] shrink-0" />
+                  <Check className="w-5 h-5 text-[var(--theme-accent)] shrink-0" />
                   <span className="text-stone-600 dark:text-stone-400 text-sm">{feature}</span>
                 </li>
               ))}
@@ -120,7 +120,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ onClose, cur
             <ul className="space-y-4 mb-8 flex-1">
               {['Unlimited decks & cards', 'AI Card Generation (100/mo)', 'Advanced analytics & heatmaps', 'Exclusive rare seeds', 'Multiplayer host capabilities', 'Priority support'].map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-[#8BC34A] shrink-0" />
+                  <Check className="w-5 h-5 text-[var(--theme-accent)] shrink-0" />
                   <span className="text-stone-300 text-sm">{feature}</span>
                 </li>
               ))}
@@ -129,7 +129,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ onClose, cur
             <button
               onClick={() => handleSubscribe('pro')}
               disabled={currentPlan === 'pro'}
-              className="w-full py-3.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white font-bold text-sm disabled:opacity-50 transition-colors cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white font-bold text-sm disabled:opacity-50 transition-colors cursor-pointer flex items-center justify-center gap-2"
             >
               {isLoading === 'pro' ? 'Loading...' : currentPlan === 'pro' ? 'Current Plan' : 'Get Oopsly Pro'}
               {!isLoading && currentPlan !== 'pro' && <ArrowRight className="w-4 h-4" />}
@@ -149,7 +149,7 @@ export const SubscriptionPage: React.FC<SubscriptionPageProps> = ({ onClose, cur
             <ul className="space-y-4 mb-8 flex-1">
               {['Everything in Pro', 'Unlimited AI Generations', 'All future updates', 'Early access to features', 'Founder badge in community'].map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-[#8BC34A] shrink-0" />
+                  <Check className="w-5 h-5 text-[var(--theme-accent)] shrink-0" />
                   <span className="text-stone-600 dark:text-stone-400 text-sm">{feature}</span>
                 </li>
               ))}

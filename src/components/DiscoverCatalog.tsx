@@ -66,7 +66,7 @@ export const DiscoverCatalog: React.FC<DiscoverCatalogProps> = ({
       {/* Banner */}
       <div className="bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 text-white rounded-3xl p-6 sm:p-8 shadow-sm">
         <div className="max-w-2xl space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[#8BC34A] text-xs font-extrabold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[var(--theme-accent)] text-xs font-extrabold uppercase tracking-wider">
             <Compass className="w-3.5 h-3.5" />
             <span>Community Decks</span>
           </div>
@@ -90,7 +90,7 @@ export const DiscoverCatalog: React.FC<DiscoverCatalogProps> = ({
             placeholder="Search verified decks by topic or keyword..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#8BC34A]"
+            className="w-full pl-9 pr-4 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-xs text-stone-800 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
           />
         </div>
 
@@ -118,7 +118,7 @@ export const DiscoverCatalog: React.FC<DiscoverCatalogProps> = ({
               onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                 selectedTag === tag
-                  ? 'bg-[#8BC34A] text-white'
+                  ? 'bg-[var(--theme-accent)] text-white'
                   : 'bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300'
               }`}
             >
@@ -147,7 +147,7 @@ export const DiscoverCatalog: React.FC<DiscoverCatalogProps> = ({
                   <div className="flex items-start justify-between gap-3">
                     <div
                       className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-2xs shrink-0"
-                      style={{ backgroundColor: item.color || '#8BC34A' }}
+                      style={{ backgroundColor: item.color || 'var(--theme-accent)' }}
                     >
                       <Layers className="w-5 h-5" />
                     </div>
@@ -199,7 +199,7 @@ export const DiscoverCatalog: React.FC<DiscoverCatalogProps> = ({
                     className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                       isSuccess
                         ? 'bg-emerald-600 text-white'
-                        : 'bg-[#8BC34A] hover:bg-[#7CB342] text-white shadow-xs'
+                        : 'bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white shadow-xs'
                     }`}
                   >
                     {isSuccess ? (

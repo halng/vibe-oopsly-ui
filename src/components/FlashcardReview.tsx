@@ -189,7 +189,7 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
           <div>
             <h2 className="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-100 line-clamp-1 flex items-center gap-1.5 sm:gap-2">
               <span className="max-w-[140px] sm:max-w-xs truncate">{subject.title}</span>
-              <span className="text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full bg-[#8BC34A]/20 text-[#558B2F] dark:text-[#8BC34A] font-extrabold uppercase">
+              <span className="text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full bg-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)] text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] font-extrabold uppercase">
                 Active Recall
               </span>
             </h2>
@@ -216,7 +216,7 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
             </div>
             <div className="w-full h-2 bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#8BC34A] rounded-full transition-all duration-300"
+                className="h-full bg-[var(--theme-accent)] rounded-full transition-all duration-300"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
@@ -261,7 +261,7 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
           <div className="flex items-center justify-between text-xs font-bold text-stone-400 dark:text-stone-500">
             <span className="uppercase tracking-wider flex items-center gap-1">
               {isFlipped ? (
-                <span className="text-[#558B2F] dark:text-[#8BC34A] bg-[#8BC34A]/15 px-2.5 py-1 rounded-md text-[10px] sm:text-xs">
+                <span className="text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] bg-[color-mix(in_srgb,var(--theme-accent)_15%,transparent)] px-2.5 py-1 rounded-md text-[10px] sm:text-xs">
                   Answer (Definition)
                 </span>
               ) : (
@@ -281,7 +281,7 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
                 title={isAutoTTS ? "Disable Auto Read Aloud" : "Enable Auto Read Aloud"}
                 className={`p-1.5 sm:p-2 rounded-xl transition-colors flex items-center gap-1.5 text-xs font-semibold ${
                   isAutoTTS 
-                    ? "text-[#558B2F] dark:text-[#8BC34A] bg-[#8BC34A]/10 hover:bg-[#8BC34A]/20" 
+                    ? "text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] hover:bg-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)]" 
                     : "text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
                 }`}
               >
@@ -457,7 +457,7 @@ export const FlashcardReview: React.FC<FlashcardReviewProps> = ({
               id="show-answer-btn"
               data-testid="btn-show-answer"
               onClick={handleFlip}
-              className="w-full py-3.5 sm:py-4 rounded-2xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-sm sm:text-base font-bold shadow-md shadow-[#8BC34A]/30 transition-all cursor-pointer hover:scale-[1.01]"
+              className="w-full py-3.5 sm:py-4 rounded-2xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-sm sm:text-base font-bold shadow-md shadow-stone-500/30 transition-all cursor-pointer hover:scale-[1.01]"
             >
               Show Answer (Space)
             </button>

@@ -267,7 +267,7 @@ export const App: React.FC = () => {
     return (
       <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-stone-200 border-t-[#8BC34A] rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-stone-200 border-t-[var(--theme-accent)] rounded-full animate-spin"></div>
           <span className="text-stone-500 font-bold text-sm animate-pulse">Loading Oopsly...</span>
         </div>
       </div>
@@ -292,7 +292,7 @@ export const App: React.FC = () => {
   return (
     <div
       id="app-root-container"
-      className="min-h-screen bg-[var(--theme-bg)] text-[var(--theme-text)] flex flex-col font-sans selection:bg-[var(--theme-accent)]/30 transition-colors"
+      className="min-h-screen bg-[var(--theme-bg)] text-[var(--theme-text)] flex flex-col font-sans selection:bg-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)] transition-colors"
       style={{
         backgroundColor: 'var(--theme-bg)',
         color: 'var(--theme-text)',

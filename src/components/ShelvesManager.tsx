@@ -81,7 +81,7 @@ export const ShelvesManager: React.FC<ShelvesManagerProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-stone-900 tracking-tight flex items-center gap-2.5">
-            <Folder className="w-6 h-6 text-[#558B2F]" />
+            <Folder className="w-6 h-6 text-[var(--theme-secondary)]" />
             <span>Manage Shelves</span>
           </h1>
           <p className="text-xs text-stone-500 mt-1">
@@ -93,7 +93,7 @@ export const ShelvesManager: React.FC<ShelvesManagerProps> = ({
           id="btn-create-new-shelf"
           data-testid="btn-create-shelf-section"
           onClick={onOpenNewShelf}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs transition-all cursor-pointer hover:scale-[1.02]"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs transition-all cursor-pointer hover:scale-[1.02]"
         >
           <Plus className="w-4 h-4" />
           <span>Create New Shelf</span>
@@ -103,7 +103,7 @@ export const ShelvesManager: React.FC<ShelvesManagerProps> = ({
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
         <div className="bg-white p-4 rounded-2xl border border-stone-200/80 shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-lime-50 text-[#558B2F] flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-lime-50 text-[var(--theme-secondary)] flex items-center justify-center shrink-0">
             <Folder className="w-5 h-5" />
           </div>
           <div>
@@ -161,7 +161,7 @@ export const ShelvesManager: React.FC<ShelvesManagerProps> = ({
           placeholder="Filter shelves by name or description..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-9 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#8BC34A] focus:border-transparent transition-all"
+          className="w-full pl-9 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)] focus:border-transparent transition-all"
         />
         {searchQuery && (
           <button
@@ -187,7 +187,7 @@ export const ShelvesManager: React.FC<ShelvesManagerProps> = ({
           </div>
           <button
             onClick={onOpenNewShelf}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Create First Shelf</span>
@@ -210,14 +210,14 @@ export const ShelvesManager: React.FC<ShelvesManagerProps> = ({
                     <div className="flex items-center gap-3">
                       <div
                         className="w-11 h-11 rounded-xl flex items-center justify-center text-white font-bold shadow-xs"
-                        style={{ backgroundColor: shelf.color || '#8BC34A' }}
+                        style={{ backgroundColor: shelf.color || 'var(--theme-accent)' }}
                       >
                         <Folder className="w-5 h-5" />
                       </div>
                       <div>
                         <h3
                           onClick={() => onSelectShelfAndGoToLibrary(shelf.id)}
-                          className="text-base font-bold text-stone-900 group-hover:text-[#558B2F] transition-colors cursor-pointer line-clamp-1"
+                          className="text-base font-bold text-stone-900 group-hover:text-[var(--theme-secondary)] transition-colors cursor-pointer line-clamp-1"
                         >
                           {shelf.name}
                         </h3>
@@ -333,7 +333,7 @@ export const ShelvesManager: React.FC<ShelvesManagerProps> = ({
                     onClick={() => onOpenNewSubject(shelf.id)}
                     className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-stone-200 hover:bg-white text-stone-700 text-xs font-semibold transition-colors cursor-pointer"
                   >
-                    <Plus className="w-3.5 h-3.5 text-[#558B2F]" />
+                    <Plus className="w-3.5 h-3.5 text-[var(--theme-secondary)]" />
                     <span>Add Subject</span>
                   </button>
 
@@ -341,7 +341,7 @@ export const ShelvesManager: React.FC<ShelvesManagerProps> = ({
                     id={`open-shelf-${shelf.id}`}
                     data-testid={`btn-open-shelf-${shelf.id}`}
                     onClick={() => onSelectShelfAndGoToLibrary(shelf.id)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer"
                   >
                     <span>View Subjects</span>
                     <ArrowRight className="w-3.5 h-3.5" />

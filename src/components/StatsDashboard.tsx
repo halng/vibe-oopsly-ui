@@ -52,7 +52,7 @@ export const StatsDashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="py-24 text-center flex flex-col items-center justify-center space-y-3">
-        <div className="w-8 h-8 rounded-full border-2 border-[#8BC34A] border-t-transparent animate-spin" />
+        <div className="w-8 h-8 rounded-full border-2 border-[var(--theme-accent)] border-t-transparent animate-spin" />
         <span className="text-xs font-semibold text-stone-500">Loading learning analytics...</span>
       </div>
     );
@@ -113,7 +113,7 @@ export const StatsDashboard: React.FC = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-stone-900 dark:text-stone-100 tracking-tight flex items-center gap-2">
-          <BarChart3 className="w-6 h-6 text-[#558B2F] dark:text-[#8BC34A]" />
+          <BarChart3 className="w-6 h-6 text-[var(--theme-secondary)] dark:text-[var(--theme-accent)]" />
           <span>Learning Analytics & FSRS Memory Forecast</span>
         </h1>
         <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
@@ -162,7 +162,7 @@ export const StatsDashboard: React.FC = () => {
 
         {/* Retention Rate */}
         <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200/80 dark:border-stone-800 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#8BC34A]/20 dark:bg-[#8BC34A]/30 text-[#558B2F] dark:text-[#8BC34A] flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)] dark:bg-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)] text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] flex items-center justify-center shrink-0">
             <Brain className="w-6 h-6" />
           </div>
           <div>
@@ -172,7 +172,7 @@ export const StatsDashboard: React.FC = () => {
             <div className="text-2xl font-black text-stone-900 dark:text-stone-100 mt-0.5">
               {retentionRate}%
             </div>
-            <span className="text-[11px] text-[#558B2F] dark:text-[#8BC34A] font-semibold">Optimal FSRS target (90%)</span>
+            <span className="text-[11px] text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] font-semibold">Optimal FSRS target (90%)</span>
           </div>
         </div>
 
@@ -224,7 +224,7 @@ export const StatsDashboard: React.FC = () => {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3)',
                   }}
                 />
-                <Bar dataKey="dueCount" name="Cards Due" fill="#8BC34A" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="dueCount" name="Cards Due" fill="var(--theme-accent)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -293,7 +293,7 @@ export const StatsDashboard: React.FC = () => {
           </div>
 
           <div className="p-3 bg-stone-50 dark:bg-stone-800/60 rounded-xl border border-stone-200/60 dark:border-stone-700/60 text-[11px] text-stone-600 dark:text-stone-300 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#8BC34A] shrink-0" />
+            <Sparkles className="w-4 h-4 text-[var(--theme-accent)] shrink-0" />
             <span>FSRS automatically schedules reviews right before you forget.</span>
           </div>
         </div>
@@ -304,7 +304,7 @@ export const StatsDashboard: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[#558B2F] dark:text-[#8BC34A]" />
+              <TrendingUp className="w-4 h-4 text-[var(--theme-secondary)] dark:text-[var(--theme-accent)]" />
               <span>Weekly Recall Performance</span>
             </h3>
             <p className="text-xs text-stone-500 dark:text-stone-400">
@@ -313,7 +313,7 @@ export const StatsDashboard: React.FC = () => {
           </div>
           <div className="flex items-center gap-4 text-xs font-semibold text-stone-600 dark:text-stone-400">
             <div className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-sm bg-[#8BC34A]" />
+              <span className="w-3 h-3 rounded-sm bg-[var(--theme-accent)]" />
               <span>Cards Reviewed</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -343,9 +343,9 @@ export const StatsDashboard: React.FC = () => {
                 type="monotone"
                 dataKey="cardsReviewed"
                 name="Cards Studied"
-                stroke="#8BC34A"
+                stroke="var(--theme-accent)"
                 strokeWidth={3}
-                dot={{ fill: '#8BC34A', r: 4 }}
+                dot={{ fill: 'var(--theme-accent)', r: 4 }}
               />
               <Line
                 type="monotone"

@@ -96,7 +96,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({ onClose }) => {
                           <div className="flex items-center gap-3">
                             <div 
                               className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
-                              style={{ backgroundColor: subject.color || '#8BC34A' }}
+                              style={{ backgroundColor: subject.color || 'var(--theme-accent)' }}
                             >
                               <Layers className="w-4 h-4" />
                             </div>

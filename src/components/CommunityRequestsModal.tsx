@@ -164,7 +164,7 @@ export const CommunityRequestsModal: React.FC<CommunityRequestsModalProps> = ({
                     data-testid={`btn-approve-req-${req.id}`}
                     disabled={processingId === req.id}
                     onClick={() => handleApprove(req.id)}
-                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer disabled:opacity-50"
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer disabled:opacity-50"
                   >
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                     <span>Approve & Add</span>

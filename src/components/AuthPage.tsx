@@ -83,7 +83,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
         <div className="max-w-md w-full mx-auto space-y-8">
           
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#8BC34A] text-white flex items-center justify-center shadow-md shadow-[#8BC34A]/30">
+            <div className="w-10 h-10 rounded-xl bg-[var(--theme-accent)] text-white flex items-center justify-center shadow-md shadow-stone-500/30">
               <Layers className="w-6 h-6" />
             </div>
             <h1 className="text-2xl font-black text-stone-900 tracking-tight">Oopsly</h1>
@@ -121,7 +121,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
                     placeholder="Jane Doe"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-900 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none transition-all"
+                    className="w-full px-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-900 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none transition-all"
                   />
                 </div>
               )}
@@ -138,7 +138,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-900 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-sm text-stone-900 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none transition-all"
                   />
                 </div>
               </div>
@@ -146,7 +146,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
               <button
                 type="submit"
                 disabled={isLoading || !email.trim() || (mode === 'signup' && !name.trim())}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white font-bold shadow-md shadow-[#8BC34A]/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white font-bold shadow-md shadow-stone-500/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <span>{isLoading ? 'Processing...' : 'Continue with Email'}</span>
                 {!isLoading && <ArrowRight className="w-4 h-4" />}
@@ -167,11 +167,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
                     placeholder="123456"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-center tracking-widest text-lg font-bold text-stone-900 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-stone-50 border border-stone-200 rounded-xl text-center tracking-widest text-lg font-bold text-stone-900 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none transition-all"
                   />
                 </div>
                 {demoCode && (
-                  <p className="text-xs text-[#558B2F] mt-2 text-center font-medium bg-[#8BC34A]/10 p-2 rounded-lg">
+                  <p className="text-xs text-[var(--theme-secondary)] mt-2 text-center font-medium bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] p-2 rounded-lg">
                     Demo code auto-filled: <span className="font-mono font-bold tracking-wider">{demoCode}</span>
                   </p>
                 )}
@@ -180,7 +180,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
               <button
                 type="submit"
                 disabled={isLoading || !otp.trim()}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white font-bold shadow-md shadow-[#8BC34A]/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white font-bold shadow-md shadow-stone-500/20 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <span>{isLoading ? 'Verifying...' : 'Verify & Sign In'}</span>
                 {!isLoading && <ArrowRight className="w-4 h-4" />}
@@ -203,7 +203,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
                 <button
                   type="button"
                   onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-                  className="font-bold text-[#8BC34A] hover:text-[#7CB342] cursor-pointer transition-colors"
+                  className="font-bold text-[var(--theme-accent)] hover:text-[#7CB342] cursor-pointer transition-colors"
                 >
                   {mode === 'login' ? 'Sign up' : 'Log in'}
                 </button>
@@ -225,14 +225,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
       {/* Right side: Illustration / Value Prop */}
       <div className="hidden md:flex flex-1 bg-[#FDFBF7] relative overflow-hidden items-center justify-center p-12">
         {/* Background decorative elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#8BC34A]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
         
         <div className="max-w-lg w-full space-y-12 relative z-10">
           <div className="space-y-4">
             <h2 className="text-4xl lg:text-5xl font-black text-stone-900 leading-tight">
               Master any subject <br/>
-              <span className="text-[#8BC34A]">with science.</span>
+              <span className="text-[var(--theme-accent)]">with science.</span>
             </h2>
             <p className="text-lg text-stone-600 leading-relaxed">
               Oopsly combines the advanced FSRS algorithm with beautiful, gamified study sessions to help you remember everything you learn.
@@ -241,8 +241,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onSuccess }) => {
 
           <div className="space-y-6">
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-full bg-[#8BC34A]/10 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="w-5 h-5 text-[#8BC34A]" />
+              <div className="w-10 h-10 rounded-full bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)] flex items-center justify-center shrink-0">
+                <CheckCircle2 className="w-5 h-5 text-[var(--theme-accent)]" />
               </div>
               <div>
                 <h3 className="font-bold text-stone-900 text-lg">Smart Scheduling</h3>

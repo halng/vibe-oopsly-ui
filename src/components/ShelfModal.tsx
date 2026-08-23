@@ -24,7 +24,7 @@ const PRESET_COLORS = [
 export const ShelfModal: React.FC<ShelfModalProps> = ({ shelf, onClose, onSave }) => {
   const [name, setName] = useState(shelf?.name || '');
   const [description, setDescription] = useState(shelf?.description || '');
-  const [color, setColor] = useState(shelf?.color || '#8BC34A');
+  const [color, setColor] = useState(shelf?.color || 'var(--theme-accent)');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,7 +83,7 @@ export const ShelfModal: React.FC<ShelfModalProps> = ({ shelf, onClose, onSave }
               placeholder="e.g. Computer Science, Medical School, Languages"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
             />
           </div>
 
@@ -94,7 +94,7 @@ export const ShelfModal: React.FC<ShelfModalProps> = ({ shelf, onClose, onSave }
               placeholder="Optional overview of subjects stored in this shelf..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none"
+              className="w-full p-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none"
             />
           </div>
 
@@ -126,7 +126,7 @@ export const ShelfModal: React.FC<ShelfModalProps> = ({ shelf, onClose, onSave }
             <button
               type="submit"
               disabled={isSubmitting || !name.trim()}
-              className="flex items-center gap-1.5 px-5 py-2 bg-[#8BC34A] hover:bg-[#7CB342] text-white font-bold text-xs rounded-xl shadow-xs cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 px-5 py-2 bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white font-bold text-xs rounded-xl shadow-xs cursor-pointer disabled:opacity-50"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{isSubmitting ? 'Saving...' : 'Save Shelf'}</span>

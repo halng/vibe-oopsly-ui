@@ -93,7 +93,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between pb-6 border-b border-stone-100 dark:border-stone-800">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#8BC34A]/20 text-[#558B2F] dark:text-[#8BC34A] flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-[color-mix(in_srgb,var(--theme-accent)_20%,transparent)] text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] flex items-center justify-center">
               <User className="w-6 h-6" />
             </div>
             <div>
@@ -117,7 +117,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
                   required
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full p-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none transition-shadow"
+                  className="w-full p-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none transition-shadow"
                 />
               </div>
 
@@ -128,7 +128,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none transition-shadow"
+                  className="w-full p-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none transition-shadow"
                 />
               </div>
             </div>
@@ -140,7 +140,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="e.g. Preparing for Distributed Systems & Medical Finals"
-                className="w-full p-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[#8BC34A] focus:outline-none transition-shadow"
+                className="w-full p-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-[var(--theme-accent)] focus:outline-none transition-shadow"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
           {/* FSRS Algorithm Settings */}
           <div className="space-y-4 pt-6 border-t border-stone-100 dark:border-stone-800">
             <h3 className="text-xs font-bold text-stone-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Sliders className="w-4 h-4 text-[#8BC34A]" />
+              <Sliders className="w-4 h-4 text-[var(--theme-accent)]" />
               <span>FSRS Spaced Repetition Parameters</span>
             </h3>
 
@@ -156,7 +156,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
             <div className="p-5 bg-stone-50 dark:bg-stone-800/50 rounded-2xl border border-stone-200/80 dark:border-stone-700/80 space-y-3">
               <div className="flex items-center justify-between font-bold text-stone-800 dark:text-stone-200">
                 <span>Target Memory Retention Rate</span>
-                <span className="text-[#558B2F] dark:text-[#8BC34A] font-black text-base">
+                <span className="text-[var(--theme-secondary)] dark:text-[var(--theme-accent)] font-black text-base">
                   {Math.round(targetRetention * 100)}%
                 </span>
               </div>
@@ -167,7 +167,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
                 step="0.01"
                 value={targetRetention}
                 onChange={(e) => setTargetRetention(parseFloat(e.target.value))}
-                className="w-full accent-[#8BC34A] cursor-pointer"
+                className="w-full accent-[var(--theme-accent)] cursor-pointer"
               />
               <div className="flex justify-between text-xs text-stone-400 font-medium">
                 <span>75% (Fewer Reviews)</span>
@@ -224,7 +224,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
                 type="button"
                 onClick={() => setSoundEffects(!soundEffects)}
                 className={`w-12 h-6 rounded-full transition-colors flex items-center p-1 cursor-pointer ${
-                  soundEffects ? 'bg-[#8BC34A] justify-end' : 'bg-stone-300 dark:bg-stone-600 justify-start'
+                  soundEffects ? 'bg-[var(--theme-accent)] justify-end' : 'bg-stone-300 dark:bg-stone-600 justify-start'
                 }`}
               >
                 <div className="w-4 h-4 rounded-full bg-white shadow-2xs" />
@@ -240,7 +240,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
                 type="button"
                 onClick={() => setAllowReminders(!allowReminders)}
                 className={`w-12 h-6 rounded-full transition-colors flex items-center p-1 cursor-pointer ${
-                  allowReminders ? 'bg-[#8BC34A] justify-end' : 'bg-stone-300 dark:bg-stone-600 justify-start'
+                  allowReminders ? 'bg-[var(--theme-accent)] justify-end' : 'bg-stone-300 dark:bg-stone-600 justify-start'
                 }`}
               >
                 <div className="w-4 h-4 rounded-full bg-white shadow-2xs" />
@@ -280,7 +280,7 @@ export const ProfileSettingsModal: React.FC<ProfileSettingsPageProps> = ({
             <button
               type="submit"
               disabled={isSaving}
-              className="flex items-center justify-center gap-2 px-8 py-3 bg-[#8BC34A] hover:bg-[#7CB342] text-white font-bold rounded-xl shadow-xs transition-all cursor-pointer w-full sm:w-auto"
+              className="flex items-center justify-center gap-2 px-8 py-3 bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white font-bold rounded-xl shadow-xs transition-all cursor-pointer w-full sm:w-auto"
             >
               <Save className="w-5 h-5" />
               <span className="text-base">{savedSuccess ? 'Saved!' : isSaving ? 'Saving...' : 'Save Settings'}</span>

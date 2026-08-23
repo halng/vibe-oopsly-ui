@@ -138,7 +138,7 @@ export const CommunityModal: React.FC<CommunityModalProps> = ({
               placeholder="e.g. Distributed Systems Guild, MedPass 2026, JLPT N2 Sprint"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-[#8BC34A]"
+              className="w-full px-3.5 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
             />
           </div>
 
@@ -153,7 +153,7 @@ export const CommunityModal: React.FC<CommunityModalProps> = ({
               placeholder="Describe your learning goals, target exams, or study topics..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-[#8BC34A]"
+              className="w-full px-3.5 py-2.5 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
             />
           </div>
 
@@ -169,7 +169,7 @@ export const CommunityModal: React.FC<CommunityModalProps> = ({
                 onClick={() => setIsPrivate(false)}
                 className={`p-3 rounded-2xl border text-left flex items-start gap-2.5 transition-all cursor-pointer ${
                   !isPrivate
-                    ? 'border-[#8BC34A] ring-2 ring-[#8BC34A]/30 bg-[#8BC34A]/5 dark:bg-[#8BC34A]/10'
+                    ? 'border-[var(--theme-accent)] ring-2 ring-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--theme-accent)_5%,transparent)] dark:bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)]'
                     : 'border-stone-200 dark:border-stone-800 hover:border-stone-300'
                 }`}
               >
@@ -192,7 +192,7 @@ export const CommunityModal: React.FC<CommunityModalProps> = ({
                 onClick={() => setIsPrivate(true)}
                 className={`p-3 rounded-2xl border text-left flex items-start gap-2.5 transition-all cursor-pointer ${
                   isPrivate
-                    ? 'border-[#8BC34A] ring-2 ring-[#8BC34A]/30 bg-[#8BC34A]/5 dark:bg-[#8BC34A]/10'
+                    ? 'border-[var(--theme-accent)] ring-2 ring-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--theme-accent)_5%,transparent)] dark:bg-[color-mix(in_srgb,var(--theme-accent)_10%,transparent)]'
                     : 'border-stone-200 dark:border-stone-800 hover:border-stone-300'
                 }`}
               >
@@ -252,7 +252,7 @@ export const CommunityModal: React.FC<CommunityModalProps> = ({
                       handleAddTag();
                     }
                   }}
-                  className="w-full pl-8 pr-3 py-2 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-[#8BC34A]"
+                  className="w-full pl-8 pr-3 py-2 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl text-xs text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-[var(--theme-accent)]"
                 />
               </div>
               <button
@@ -299,7 +299,7 @@ export const CommunityModal: React.FC<CommunityModalProps> = ({
               data-testid="btn-submit-create-community"
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#8BC34A] hover:bg-[#7CB342] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--theme-accent)] hover:bg-[var(--theme-secondary)] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
             >
               <Sparkles className="w-4 h-4" />
               <span>{isSubmitting ? 'Creating...' : 'Create Community'}</span>
