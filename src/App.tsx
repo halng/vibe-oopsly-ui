@@ -1,3 +1,5 @@
+import { BrowserRouter } from 'react-router-dom';
+import { registerServiceWorker } from './serviceWorkerRegistration';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
@@ -28,8 +30,10 @@ import { ApiService } from './services/api';
 import { ThemeId, applyTheme, getSavedTheme, saveTheme } from './utils/theme';
 import { syncManager } from './services/syncManager';
 import { OfflineSyncBanner } from './components/OfflineSyncBanner';
+import { Layout } from './components/ui/Layout';
 
 export const App: React.FC = () => {
+  React.useEffect(() => { registerServiceWorker(); }, []);
   // Authentication & Profile State
   const [user, setUser] = useState<UserProfile | null>(null);
   const [showAuthPage, setShowAuthPage] = useState(false);
@@ -290,108 +294,16 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div
-      id="app-root-container"
-      className="min-h-screen bg-[var(--theme-bg)] text-[var(--theme-text)] flex flex-col font-sans selection:bg-[color-mix(in_srgb,var(--theme-accent)_30%,transparent)] transition-colors"
-      style={{
-        backgroundColor: 'var(--theme-bg)',
-        color: 'var(--theme-text)',
-      }}
-    >
-      {/* Top Header Navbar */}
-      {user && (
-        <Navbar
-          user={user}
-          onOpenNewShelf={() => {
-            setEditingShelf(null);
-            setIsShelfModalOpen(true);
-          }}
-        />
-      )}
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 md:pb-8">
-        <Routes>
-          <Route path="/" element={<Navigate to="/library" replace />} />
-          <Route path="/library" element={
-            <LibraryShelvesView
-              user={user!}
-              onUpdateUser={setUser}
-              shelves={shelves}
-              subjects={subjects}
-              selectedShelfId={selectedShelfId}
-              onSelectShelf={setSelectedShelfId}
-              onOpenNewShelf={() => {
-                setEditingShelf(null);
-                setIsShelfModalOpen(true);
-              }}
-              onOpenEditShelf={(shelf) => {
-                setEditingShelf(shelf);
-                setIsShelfModalOpen(true);
-              }}
-              onDeleteShelf={handleDeleteShelf}
-              onOpenNewSubject={(shelfId) => {
-                setSubjectModalShelfId(shelfId);
-                setEditingSubject(null);
-                setIsSubjectModalOpen(true);
-              }}
-              onOpenEditSubject={(subj) => {
-                setEditingSubject(subj);
-                setSubjectModalShelfId(subj.shelfId);
-                setIsSubjectModalOpen(true);
-              }}
-              onDeleteSubject={handleDeleteSubject}
-              onStartReview={handleStartReview}
-              onStartLearnMode={handleStartLearn}
-              onStartMatchGame={handleStartMatch}
-              onStartTestSuite={handleStartTest}
-              onViewSubjectDetails={setActiveDetailsSubject}
-              onJoinMultiplayer={handleJoinMultiplayer}
-              onRefreshData={loadShelvesAndSubjects}
-            />
-          } />
-          
-          <Route path="/study" element={
-            <StudyPomodoroView
-              subjects={subjects}
-              onRewardXp={handleRewardXp}
-              onRefreshData={loadShelvesAndSubjects}
-            />
-          } />
-
-          <Route path="/discover" element={
-            <DiscoverCatalog
-              shelves={shelves}
-              onCloneSuccess={() => {
-                loadShelvesAndSubjects();
-              }}
-            />
-          } />
-
-          <Route path="/stats" element={<StatsDashboard />} />
-          <Route path="/leaderboard" element={<LeaderboardView currentUser={user || undefined} />} />
-          
-          <Route path="/settings" element={
-            <ProfileSettingsModal
-              user={user}
-              onUpdateUser={setUser}
-              onOpenThemeModal={() => setIsThemeModalOpen(true)}
-              onLogout={handleLogout}
-            />
-          } />
-
-          <Route path="/subscribe" element={
-            <SubscriptionPage onClose={() => window.history.back()} />
-          } />
-
-          <Route path="*" element={<Navigate to="/library" replace />} />
-        </Routes>
-      </main>
-
-      {/* Footer */}
-      <footer className="py-6 border-t border-stone-200/60 dark:border-stone-800/60 text-center text-xs text-stone-400">
-        <p>© 2026 Oopsly · Spaced Repetition Flashcards with FSRS Algorithm & Collaborative Communities</p>
-      </footer>
+    <BrowserRouter>
+    
+      <Layout
+        user={user}
+        onOpenNewShelf={() => {
+          setEditingShelf(null);
+          setIsShelfModalOpen(true);
+        }}
+        modals={
+          <>
 
       {/* Full-screen Flashcard Review Mode */}
       {activeReviewSession && (
@@ -532,6 +444,85 @@ export const App: React.FC = () => {
           }}
         />
       )}
-    </div>
+              </>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<Navigate to="/library" replace />} />
+          <Route path="/library" element={
+            <LibraryShelvesView
+              user={user!}
+              onUpdateUser={setUser}
+              shelves={shelves}
+              subjects={subjects}
+              selectedShelfId={selectedShelfId}
+              onSelectShelf={setSelectedShelfId}
+              onOpenNewShelf={() => {
+                setEditingShelf(null);
+                setIsShelfModalOpen(true);
+              }}
+              onOpenEditShelf={(shelf) => {
+                setEditingShelf(shelf);
+                setIsShelfModalOpen(true);
+              }}
+              onDeleteShelf={handleDeleteShelf}
+              onOpenNewSubject={(shelfId) => {
+                setSubjectModalShelfId(shelfId);
+                setEditingSubject(null);
+                setIsSubjectModalOpen(true);
+              }}
+              onOpenEditSubject={(subj) => {
+                setEditingSubject(subj);
+                setSubjectModalShelfId(subj.shelfId);
+                setIsSubjectModalOpen(true);
+              }}
+              onDeleteSubject={handleDeleteSubject}
+              onStartReview={handleStartReview}
+              onStartLearnMode={handleStartLearn}
+              onStartMatchGame={handleStartMatch}
+              onStartTestSuite={handleStartTest}
+              onViewSubjectDetails={setActiveDetailsSubject}
+              onJoinMultiplayer={handleJoinMultiplayer}
+              onRefreshData={loadShelvesAndSubjects}
+            />
+          } />
+          
+          <Route path="/study" element={
+            <StudyPomodoroView
+              subjects={subjects}
+              onRewardXp={handleRewardXp}
+              onRefreshData={loadShelvesAndSubjects}
+            />
+          } />
+
+          <Route path="/discover" element={
+            <DiscoverCatalog
+              shelves={shelves}
+              onCloneSuccess={() => {
+                loadShelvesAndSubjects();
+              }}
+            />
+          } />
+
+          <Route path="/stats" element={<StatsDashboard />} />
+          <Route path="/leaderboard" element={<LeaderboardView currentUser={user || undefined} />} />
+          
+          <Route path="/settings" element={
+            <ProfileSettingsModal
+              user={user}
+              onUpdateUser={setUser}
+              onOpenThemeModal={() => setIsThemeModalOpen(true)}
+              onLogout={handleLogout}
+            />
+          } />
+
+          <Route path="/subscribe" element={
+            <SubscriptionPage onClose={() => window.history.back()} />
+          } />
+
+          <Route path="*" element={<Navigate to="/library" replace />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   );
 };
